@@ -11,7 +11,10 @@
     "require": {},
     "autoload": {
         "classmap": [
-            "app/"
+            "app/",
+            "config/",
+            "models/",
+            "routes/"
         ]
     }
 }

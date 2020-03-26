@@ -1,29 +1,50 @@
 <?php
+
 namespace GifGrabber;
 
 use Exception;
 
-abstract class Route {
-  abstract protected function getMethod(): string;
-  abstract protected function getPath(): string;
-  public function handle(): Response
+class Route
+{
+  /** @var string */
+  private $method;
+  /** @var string */
+  private $path;
+  /** @var RouteHandler */
+  private $handler;
+  /** @var RouteParameters */
+  private $params;
+
+  public function __construct(string $method, string $path, RouteHandler $handler)
   {
-    if($this->getMethod() !== Request::getMethod())
-    {
-      throw new Exception('Route does not match requested path.');
+    $this->method = strtoupper($method);
+    if (!in_array($this->method, ['GET', 'POST'])) {
+      throw new Exception(sprintf('Route method "%s" not allowed.', $method));
+    }
+    $this->path = $path;
+    $this->handler = $handler;
+  }
+
+  public function isMatch(): bool
+  {
+    if ($this->method !== Request::getMethod()) {
+      return false;
     }
     $pattern = sprintf(
-      '~%s~',
-      preg_replace('~:([^/]+)~', '(?P<$1>[^/]+)', $this->getPath())
+      '~^%s$~',
+      preg_replace('~:([^/]+)~', '(?P<$1>[^/]+)', $this->path)
     );
     $matches = [];
     $matchResult = preg_match($pattern, Request::getPath(), $matches);
-    if(empty($matchResult))
-    {
-      throw new Exception('Route does not match requested path.');
+    if (empty($matchResult)) {
+      return false;
     }
-    return $this->handler($matches);
+    $this->params = new RouteParameters($matches);
+    return true;
   }
-  /** @param array<string,string> $params */
-  abstract public function handler(array $params): Response;
+
+  public function getResponse(): Response
+  {
+    return $this->handler->handle($this->params);
+  }
 }

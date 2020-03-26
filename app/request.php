@@ -9,6 +9,8 @@ class Request {
 
   public static function getPath(): string
   {
-    return $_SERVER['PATH_INFO'];
+    $path = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'] ?? '/';
+    $trimmedPath = preg_replace('~/$~', '', $path);
+    return strval($trimmedPath) ?: '/';
   }
 }
