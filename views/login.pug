@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= "GIF Grabber - Admin Login"
+  form(action="/login", method="post")
+    input(type="email", name="email")
+    input(type="password", name="password")
+    button(type="submit", name="login") Log In

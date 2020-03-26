@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  h1= "GIF Grabber - Edit"
+  form(action="/edit", method="post")
+    input(type="hidden", name="gif", value=gif.id)
+    select(name="category")
+      each category in categories
+        option(value=category.id, selected=(category.id==gif.categoryId))= category.name
+    -
+      let src = "/images/" + gif.id + "." + gif.type
+      let gifffer = src
+      if(gif.type != "gif"){
+        gifffer = false
+      } else {
+        src = false
+      }
+    img.gif-image(src=src, data-gifffer=gifffer)
+    input(type="text", name="title", placeholder="Title", value=gif.title)
+    input(type="text", name="url", cols="30", rows="10", placeholder="URL", value=gif.url)
+    textarea(name="caption", cols="30", rows="10", placeholder="Caption")=gif.caption
+    label
+      input(type="checkbox", name="approved", value="1", checked=!!gif.approved)
+      | Approved
+    button(type="submit", name="save", value="save") Save
+    button(type="submit", name="delete", value="delete") Delete
