@@ -1,0 +1,17 @@
+{
+    "name": "zeal/gif-grabber",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Zeal J Mayfield",
+            "email": "zeal.j.mayfield@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "classmap": [
+            "app/"
+        ]
+    }
+}
