@@ -1,6 +1,8 @@
 <?php
 namespace GifGrabber;
 
+use Throwable;
+
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
@@ -13,7 +15,16 @@ foreach($routeFiles as $routeFile)
   require_once $routeFile;
 }
 
-Router::route();
+try {
+  Router::route();
+} catch (Throwable $e) {
+  $exception = new Response();
+  $exception->addError($e->getMessage());
+  $exception->setDataObject((object)[
+    'trace' => $e->getTrace()
+  ]);
+  $exception->render();
+}
 
 $notFound = new Response();
 $notFound->addError(sprintf(
