@@ -1,4 +1,5 @@
 <?php
+
 namespace GifGrabber;
 
 use DateTime;
@@ -9,8 +10,9 @@ use PDOStatement;
 use stdClass;
 use Throwable;
 
-abstract class Model implements JsonSerializable {
-  /** @var array<string,scalar> */
+abstract class Model implements JsonSerializable
+{
+  /** @var array<string,(float|int|string|null)> */
   private $data = [];
   /** @var array<string,bool> */
   private $changed = [];
@@ -19,14 +21,27 @@ abstract class Model implements JsonSerializable {
   /** @var array<int,string> */
   protected $alsoSerialize = [];
   /** @var array<int,string> */
-  protected $doNotSerialize = [];
+  protected $doNotSet = [];
 
   abstract public static function getTableName(): string;
 
-  /** @param array<string,scalar> $data */
-  final public function __construct(array $data = [])
+  /** @return array<string,(null|string|float|int)> */
+  protected function getDefaults(): array
   {
-    $this->data = $data;
+    return [];
+  }
+
+  final public function __construct(object $data = null)
+  {
+    if (!is_null($data)) {
+      foreach (get_object_vars($data) as $property => $value) {
+        if (in_array($property, $this->doNotSet)) {
+          continue;
+        }
+        $methodName = sprintf('set%s', $property);
+        $this->$methodName($value);
+      }
+    }
   }
 
   /**
@@ -37,8 +52,7 @@ abstract class Model implements JsonSerializable {
   {
     $items = [];
     $records = $statement->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    foreach($records as $record)
-    {
+    foreach ($records as $record) {
       $items[] = new static($record);
     }
     return $items;
@@ -62,7 +76,7 @@ abstract class Model implements JsonSerializable {
       'id' => $id
     ]);
     $records = self::fromRecords($statement);
-    if(empty($records)){
+    if (empty($records)) {
       $className = explode('\\', get_called_class());
       $classShortName = array_pop($className);
       throw new Exception(sprintf(
@@ -89,7 +103,7 @@ abstract class Model implements JsonSerializable {
     return self::fromRecords($statement);
   }
 
-  /** @param scalar $value */
+  /** @param (float|int|string|null) $value */
   protected function set(string $key, $value): void
   {
     $this->data[$key] = $value;
@@ -101,16 +115,24 @@ abstract class Model implements JsonSerializable {
     $this->set($key, $value);
   }
 
-  /** @return scalar */
+  protected function setString(string $key, string $value): void
+  {
+    $this->set($key, $value);
+  }
+
+  /** @return (float|int|string|null) */
   protected function get(string $key)
   {
-    if(!isset($this->data[$key]))
-    {
-      throw new Exception(sprintf(
-        '%s not set on %s',
-        $key,
-        get_called_class()
-      ));
+    if (!isset($this->data[$key])) {
+      if (array_key_exists($this->normalizeKey($key), $this->getDefaults())) {
+        $this->data[$key] = $this->getDefaults()[$this->normalizeKey($key)];
+      } else {
+        throw new Exception(sprintf(
+          '%s not set on %s',
+          $key,
+          get_called_class()
+        ));
+      }
     }
     return $this->data[$key];
   }
@@ -154,8 +176,7 @@ abstract class Model implements JsonSerializable {
   private function insert(): void
   {
     $values = [];
-    foreach(array_keys($this->changed) as $key)
-    {
+    foreach (array_keys($this->changed) as $key) {
       $values[$key] = $this->data[$key];
     }
     $sql = sprintf(
@@ -170,14 +191,14 @@ abstract class Model implements JsonSerializable {
     );
     $statement = Database::getConnection()->prepare($sql);
     $statement->execute($values);
+    $this->data['id'] = intval(Database::getConnection()->lastInsertId());
   }
 
   private function update(): void
   {
     $values = [];
     $setStatements = [];
-    foreach(array_keys($this->changed) as $key)
-    {
+    foreach (array_keys($this->changed) as $key) {
       $values[$key] = $this->data[$key];
       $setStatements[] = sprintf(
         '`%s` = :%s',
@@ -211,25 +232,25 @@ abstract class Model implements JsonSerializable {
     ]);
   }
 
+  private function normalizeKey(string $key): string
+  {
+    return str_replace(' ', '', ucwords(preg_replace('~[-_]~', ' ', $key) ?? ''));
+  }
+
   public function jsonSerialize(): stdClass
   {
     $return = new stdClass();
-    foreach(array_keys($this->data) as $key)
-    {
-      if(in_array($key, $this->doNotSerialize)){
-        continue;
-      }
-      if(in_array($key, array_keys($this->aliases)))
-      {
+    $fields = !empty($this->getDefaults()) ? array_keys($this->getDefaults()) : array_keys($this->data);
+    foreach ($fields as $key) {
+      if (in_array($key, array_keys($this->aliases))) {
         $name = $this->aliases[$key];
       } else {
-        $name = str_replace(' ', '', ucwords(preg_replace('~[-_]~', ' ', strtolower($key)) ?? ''));
+        $name = $this->normalizeKey($key);
       }
       $methodName = sprintf('get%s', $name);
       $return->$name = $this->$methodName();
     }
-    foreach($this->alsoSerialize as $name)
-    {
+    foreach ($this->alsoSerialize as $name) {
       $methodName = sprintf('get%s', $name);
       $return->$name = $this->$methodName();
     }

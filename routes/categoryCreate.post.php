@@ -1,20 +1,25 @@
 <?php
 
+use GifGrabber\Category;
+use GifGrabber\Request;
 use GifGrabber\Response;
 use GifGrabber\RouteHandler;
 use GifGrabber\RouteParameters;
 use GifGrabber\Router;
 
-class GreetRouteHandler extends RouteHandler
+class CategoryCreateRouteHandler extends RouteHandler
 {
   public function handle(RouteParameters $params): Response
   {
+    $category = new Category(Request::getJsonBody());
+    $category->save();
+
     $response = new Response();
     $response->setDataObject((object)[
-      'message' => sprintf('Welcome, %s! You %s!', $params->getString('name'), $params->getString('verb'))
+      'category' => $category
     ]);
     return $response;
   }
 }
 
-Router::addRoute('GET', '/greet/:name/:verb', new GreetRouteHandler());
+Router::addRoute('POST', '/category', new CategoryCreateRouteHandler());
