@@ -9,13 +9,24 @@ class Gif extends Model {
   protected $alsoSerialize = [
     'AssetUrl'
   ];
-  protected $doNotSerialize = [
-    'file_type'
-  ];
 
   public static function getTableName(): string
   {
     return 'gif';
+  }
+
+  protected function getDefaults(): array
+  {
+    return [
+      'Id' => null,
+      'CreatedAt' => (new DateTime())->format('Y-m-d G:i:s'),
+      'UpdatedAt' => (new DateTime())->format('Y-m-d G:i:s'),
+      'Approved' => 0,
+      'Title' => null,
+      'Caption' => null,
+      'Url' => null,
+      'CategoryId' => null
+    ];
   }
 
   public function getCreatedAt(): DateTime
