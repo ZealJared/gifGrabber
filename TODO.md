@@ -7,7 +7,7 @@
     * Create ✓
     * Read ✓
     * Update ✓
-    * Delete
+    * Delete ✓
   * Gif
     * Create
     * Read
