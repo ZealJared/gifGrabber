@@ -14,7 +14,7 @@
     * Update ✓
     * Delete ✓
 * Bug
-  * Model does not correctly track changed status (update attempts to update all present fields)
+  * Model does not correctly track changed status (update attempts to update all present fields) ✓
 * UI
   * Category
     * Create

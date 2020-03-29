@@ -123,6 +123,10 @@ abstract class Model implements JsonSerializable
   /** @param (float|int|string|null) $value */
   protected function set(string $key, $value): void
   {
+    $oldValue = $this->data[$key] ?? $this->getDefaults()[$key] ?? null;
+    if (strval($value) === strval($oldValue)) {
+      return;
+    }
     $this->data[$key] = $value;
     $this->changed[$key] = true;
   }
@@ -203,6 +207,9 @@ abstract class Model implements JsonSerializable
 
   public function save(): void
   {
+    if (empty($this->changed)) {
+      return;
+    }
     try {
       $this->getId();
       $this->update();
