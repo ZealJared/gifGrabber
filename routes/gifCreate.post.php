@@ -1,21 +1,26 @@
 <?php
 
 use GifGrabber\Gif;
+use GifGrabber\Request;
 use GifGrabber\Response;
 use GifGrabber\RouteHandler;
 use GifGrabber\RouteParameters;
 use GifGrabber\Router;
 
-class GifGetByIdRouteHandler extends RouteHandler
+class GifCreateRouteHandler extends RouteHandler
 {
   public function handle(RouteParameters $params): Response
   {
+    $gif = new Gif();
+    $gif->jsonSet(Request::getJsonBody());
+    $gif->save();
+
     $response = new Response();
     $response->setDataObject((object)[
-      'gif' => Gif::findById($params->getInteger('id'))
+      'gif' => $gif
     ]);
     return $response;
   }
 }
 
-Router::addRoute('GET', '/gif/:id', new GifGetByIdRouteHandler());
+Router::addRoute('POST', '/gif', new GifCreateRouteHandler());

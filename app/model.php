@@ -45,8 +45,7 @@ abstract class Model implements JsonSerializable
           continue;
         }
         $methodName = sprintf('set%s', $property);
-        if(is_object($value) && property_exists($value, 'date') && property_exists($value, 'timezone'))
-        {
+        if (is_object($value) && property_exists($value, 'date') && property_exists($value, 'timezone')) {
           $value = new DateTime(sprintf('%s %s', $value->date, $value->timezone));
         }
         $this->$methodName($value);
@@ -138,6 +137,16 @@ abstract class Model implements JsonSerializable
     $this->set($key, $value);
   }
 
+  protected function setNull(string $key): void
+  {
+    $this->set($key, NULL);
+  }
+
+  protected function setBool(string $key, bool $value): void
+  {
+    $this->set($key, $value ? 1 : 0);
+  }
+
   /** @return (float|int|string|null) */
   protected function get(string $key)
   {
@@ -157,21 +166,33 @@ abstract class Model implements JsonSerializable
 
   protected function getInteger(string $key): int
   {
+    if (is_null($this->get($key))) {
+      throw new Exception(sprintf('%s is NULL', $key));
+    }
     return intval($this->get($key));
   }
 
   protected function getString(string $key): string
   {
+    if (is_null($this->get($key))) {
+      throw new Exception(sprintf('%s is NULL', $key));
+    }
     return strval($this->get($key));
   }
 
   protected function getDateTime(string $key): DateTime
   {
+    if (is_null($this->get($key))) {
+      throw new Exception(sprintf('%s is NULL', $key));
+    }
     return new DateTime($this->getString($key));
   }
 
   protected function getBool(string $key): bool
   {
+    if (is_null($this->get($key))) {
+      throw new Exception(sprintf('%s is NULL', $key));
+    }
     return boolval($this->get($key));
   }
 
