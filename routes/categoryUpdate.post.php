@@ -7,11 +7,11 @@ use GifGrabber\RouteHandler;
 use GifGrabber\RouteParameters;
 use GifGrabber\Router;
 
-class CategoryCreateRouteHandler extends RouteHandler
+class CategoryUpdateRouteHandler extends RouteHandler
 {
   public function handle(RouteParameters $params): Response
   {
-    $category = new Category();
+    $category = Category::findById($params->getInteger('id'));
     $category->jsonSet(Request::getJsonBody());
     $category->save();
 
@@ -23,4 +23,4 @@ class CategoryCreateRouteHandler extends RouteHandler
   }
 }
 
-Router::addRoute('POST', '/category', new CategoryCreateRouteHandler());
+Router::addRoute('POST', '/category/:id', new CategoryUpdateRouteHandler());

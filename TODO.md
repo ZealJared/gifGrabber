@@ -6,7 +6,7 @@
   * Category
     * Create ✓
     * Read ✓
-    * Update
+    * Update ✓
     * Delete
   * Gif
     * Create

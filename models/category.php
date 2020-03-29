@@ -4,11 +4,6 @@ namespace GifGrabber;
 use DateTime;
 
 class Category extends Model {
-  protected $doNotSet = [
-    'CreatedAt',
-    'UpdatedAt'
-  ];
-
   public static function getTableName(): string
   {
     return 'category';
@@ -32,15 +27,5 @@ class Category extends Model {
   public function setName(string $name): void
   {
     $this->setString('name', $name);
-  }
-
-  public function getCreatedAt(): DateTime
-  {
-    return $this->getDateTime('created_at');
-  }
-
-  public function getUpdatedAt(): DateTime
-  {
-    return $this->getDateTime('updated_at');
   }
 }

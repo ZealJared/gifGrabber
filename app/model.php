@@ -22,6 +22,12 @@ abstract class Model implements JsonSerializable
   protected $alsoSerialize = [];
   /** @var array<int,string> */
   protected $doNotSet = [];
+  /** @var array<int,string> */
+  private $doNotEverSet = [
+    'Id',
+    'CreatedAt',
+    'UpdatedAt'
+  ];
 
   abstract public static function getTableName(): string;
 
@@ -35,7 +41,7 @@ abstract class Model implements JsonSerializable
   {
     if (!is_null($data)) {
       foreach (get_object_vars($data) as $property => $value) {
-        if (in_array($property, $this->doNotSet)) {
+        if (in_array($property, $this->doNotSet) || in_array($property, $this->doNotEverSet)) {
           continue;
         }
         $methodName = sprintf('set%s', $property);
@@ -182,6 +188,7 @@ abstract class Model implements JsonSerializable
     } catch (Throwable $e) {
       $this->insert();
     }
+    $this->data['updated_at'] = (new DateTime())->format('Y-m-d G:i:s');
     $this->changed = [];
   }
 
@@ -208,7 +215,9 @@ abstract class Model implements JsonSerializable
 
   private function update(): void
   {
-    $values = [];
+    $values = [
+      'id' => $this->getId()
+    ];
     $setStatements = [];
     foreach (array_keys($this->changed) as $key) {
       $values[$key] = $this->data[$key];
@@ -221,7 +230,8 @@ abstract class Model implements JsonSerializable
     $sql = sprintf(
       'UPDATE
       `%s`
-      SET %s',
+      SET %s
+      WHERE `id` = :id',
       $this->getTableName(),
       implode(', ', $setStatements)
     );
@@ -267,5 +277,15 @@ abstract class Model implements JsonSerializable
       $return->$name = $this->$methodName();
     }
     return $return;
+  }
+
+  public function getCreatedAt(): DateTime
+  {
+    return $this->getDateTime('created_at');
+  }
+
+  public function getUpdatedAt(): DateTime
+  {
+    return $this->getDateTime('updated_at');
   }
 }

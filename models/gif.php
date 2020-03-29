@@ -6,6 +6,7 @@ use DateTime;
 class Gif extends Model {
   /** @var Category|null */
   private $category = null;
+
   protected $alsoSerialize = [
     'AssetUrl'
   ];
@@ -27,16 +28,6 @@ class Gif extends Model {
       'Url' => null,
       'CategoryId' => null
     ];
-  }
-
-  public function getCreatedAt(): DateTime
-  {
-    return $this->getDateTime('created_at');
-  }
-
-  public function getUpdatedAt(): DateTime
-  {
-    return $this->getDateTime('updated_at');
   }
 
   public function getApproved(): bool
