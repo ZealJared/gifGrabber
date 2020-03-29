@@ -31,7 +31,7 @@ abstract class Model implements JsonSerializable
     return [];
   }
 
-  final public function __construct(object $data = null)
+  public function jsonSet(object $data = null): void
   {
     if (!is_null($data)) {
       foreach (get_object_vars($data) as $property => $value) {
@@ -39,8 +39,20 @@ abstract class Model implements JsonSerializable
           continue;
         }
         $methodName = sprintf('set%s', $property);
+        if(is_object($value) && property_exists($value, 'date') && property_exists($value, 'timezone'))
+        {
+          $value = new DateTime(sprintf('%s %s', $value->date, $value->timezone));
+        }
         $this->$methodName($value);
       }
+    }
+  }
+
+  /** @param array<string,(null|string|float|int)> $data */
+  final public function __construct(array $data = null)
+  {
+    if (!is_null($data)) {
+      $this->data = $data;
     }
   }
 

@@ -5,7 +5,7 @@
 * API
   * Category
     * Create ✓
-    * Read
+    * Read ✓
     * Update
     * Delete
   * Gif
