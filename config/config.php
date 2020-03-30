@@ -52,4 +52,12 @@ class Config {
       self::getStorageFolderName()
     );
   }
+
+  /** @return array<int,string> */
+  public static function getAllowedOrigins(): array
+  {
+    return [
+      'http://localhost:8080'
+    ];
+  }
 }

@@ -9,6 +9,10 @@ date_default_timezone_set('America/Los_Angeles');
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (in_array(Request::getOrigin(), Config::getAllowedOrigins())) {
+  header(sprintf('Access-Control-Allow-Origin: %s', Request::getOrigin()));
+}
+
 $routeFiles = glob('../routes/*') ?: [];
 
 foreach($routeFiles as $routeFile)

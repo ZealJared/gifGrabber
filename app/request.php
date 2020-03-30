@@ -26,4 +26,9 @@ class Request {
     }
     return $jsonBody;
   }
+
+  public static function getOrigin(): string
+  {
+    return strval($_SERVER['HTTP_ORIGIN']);
+  }
 }
