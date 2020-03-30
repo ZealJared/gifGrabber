@@ -31,6 +31,46 @@ abstract class Model implements JsonSerializable
 
   abstract public static function getTableName(): string;
 
+  protected function hookBeforeSave(): void
+  {
+    //do nothing
+  }
+
+  protected function hookAfterSave(): void
+  {
+    //do nothing
+  }
+
+  protected function hookBeforeInsert(): void
+  {
+    //do nothing
+  }
+
+  protected function hookAfterInsert(): void
+  {
+    //do nothing
+  }
+
+  protected function hookBeforeUpdate(): void
+  {
+    //do nothing
+  }
+
+  protected function hookAfterUpdate(): void
+  {
+    //do nothing
+  }
+
+  protected function hookBeforeDelete(): void
+  {
+    //do nothing
+  }
+
+  protected function hookAfterDelete(): void
+  {
+    //do nothing
+  }
+
   /** @return array<string,(null|string|float|int)> */
   protected function getDefaults(): array
   {
@@ -210,18 +250,26 @@ abstract class Model implements JsonSerializable
     if (empty($this->changed)) {
       return;
     }
+    $this->hookBeforeSave();
+    $id = null;
     try {
-      $this->getId();
-      $this->update();
+      $id = $this->getId();
     } catch (Throwable $e) {
+      $id = null;
+    }
+    if (is_null($id)) {
       $this->insert();
+    } else {
+      $this->update();
     }
     $this->data['updated_at'] = (new DateTime())->format('Y-m-d G:i:s');
     $this->changed = [];
+    $this->hookAfterSave();
   }
 
   private function insert(): void
   {
+    $this->hookBeforeInsert();
     $values = [];
     foreach (array_keys($this->changed) as $key) {
       $values[$key] = $this->data[$key];
@@ -239,10 +287,12 @@ abstract class Model implements JsonSerializable
     $statement = Database::getConnection()->prepare($sql);
     $statement->execute($values);
     $this->data['id'] = intval(Database::getConnection()->lastInsertId());
+    $this->hookAfterInsert();
   }
 
   private function update(): void
   {
+    $this->hookBeforeUpdate();
     $values = [
       'id' => $this->getId()
     ];
@@ -265,10 +315,12 @@ abstract class Model implements JsonSerializable
     );
     $statement = Database::getConnection()->prepare($sql);
     $statement->execute($values);
+    $this->hookAfterUpdate();
   }
 
   public function delete(): void
   {
+    $this->hookBeforeDelete();
     $sql = sprintf(
       'DELETE FROM
       `%s`
@@ -280,11 +332,17 @@ abstract class Model implements JsonSerializable
     $statement->execute([
       'id' => $this->getId()
     ]);
+    $this->hookAfterDelete();
   }
 
   private function normalizeKey(string $key): string
   {
     return str_replace(' ', '', ucwords(preg_replace('~[-_]~', ' ', $key) ?? ''));
+  }
+
+  protected function wasChanged(string $key): bool
+  {
+    return !empty($this->changed[$key]);
   }
 
   public function jsonSerialize(): stdClass

@@ -2,6 +2,7 @@
 namespace GifGrabber;
 
 use DateTime;
+use Exception;
 use Throwable;
 
 class Gif extends Model {
@@ -9,11 +10,15 @@ class Gif extends Model {
   private $category = null;
 
   protected $doNotSet = [
-    'AssetUrl'
+    'ImageUrl',
+    'AnimationUrl',
+    'VideoUrl'
   ];
 
   protected $alsoSerialize = [
-    'AssetUrl'
+    'ImageUrl',
+    'AnimationUrl',
+    'VideoUrl'
   ];
 
   public static function getTableName(): string
@@ -80,6 +85,17 @@ class Gif extends Model {
 
   public function setUrl(string $url): void
   {
+    if (parse_url($url) === false) {
+      throw new Exception('Provided URL is invalid.');
+    }
+    $headers = get_headers($url, 1);
+    if ($headers === false) {
+      throw new Exception(sprintf('Could not reach URL: %s', $url));
+    }
+    $integerKeyHeaders = array_filter($headers, function ($key) { return is_int($key); }, ARRAY_FILTER_USE_KEY);
+    if (array_pop($integerKeyHeaders) !== 'HTTP/1.1 200 OK') {
+      throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $url));
+    }
     $this->setString('url', $url);
   }
 
@@ -106,12 +122,50 @@ class Gif extends Model {
     return $this->category;
   }
 
-  public function getAssetUrl(): string
+  public function getStoragePath(): string
+  {
+    $path = sprintf(
+      '%s/gif/%d',
+      Config::getStoragePath(),
+      $this->getId()
+    );
+    if (!file_exists($path)) {
+      mkdir($path, 0777, true);
+    }
+    return $path;
+  }
+
+  public function getImageUrl(): string
+  {
+    return sprintf(
+      '%s/gif/%d/image.jpg',
+      Config::getStorageUrl(),
+      $this->getId()
+    );
+  }
+
+  public function getAnimationUrl(): string
   {
     return sprintf(
       '%s/gif/%d/animation.gif',
       Config::getStorageUrl(),
       $this->getId()
     );
+  }
+
+  public function getVideoUrl(): string
+  {
+    return sprintf(
+      '%s/gif/%d/video.mp4',
+      Config::getStorageUrl(),
+      $this->getId()
+    );
+  }
+
+  protected function hookBeforeSave(): void
+  {
+    if ($this->wasChanged('url')) {
+      GifGrabber::grab($this);
+    }
   }
 }

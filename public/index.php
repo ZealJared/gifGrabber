@@ -16,13 +16,31 @@ foreach($routeFiles as $routeFile)
   require_once $routeFile;
 }
 
+$strategyFiles = glob('../strategies/*') ?: [];
+
+foreach($strategyFiles as $strategyFile)
+{
+  require_once $strategyFile;
+}
+
 try {
   Router::route();
 } catch (Throwable $e) {
   $exception = new Response();
   $exception->addError($e->getMessage());
+  $trace = $e->getTrace();
+  array_unshift($trace, [
+    'file' => $e->getFile(),
+    'line' => $e->getLine(),
+    'function' => '',
+    'class' => '',
+    'type' => '',
+    'args' => [
+      ''
+    ]
+  ]);
   $exception->setDataObject((object)[
-    'trace' => $e->getTrace()
+    'trace' => $trace
   ]);
   $exception->render();
 }
