@@ -23,6 +23,9 @@ export default class Api {
     if (object === null) {
       throw new Error(text)
     }
+    if (object.errors) {
+      throw new Error(object.errors[0])
+    }
     return object
   }
 
