@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="(index, category) in categoryList" :key="index">{{ category.Name }}</li>
+    <li v-for="(category, index) in categoryList" :key="index">{{ category.Name }}</li>
   </ul>
 </template>
 
@@ -12,7 +12,12 @@ export default {
     }
   },
   async mounted () {
-    this.categoryList = await this.$api.getCategoryList()
+    const response = await this.$api.getCategoryList()
+    if (response.data.category) {
+      this.categoryList = response.data.category
+    } else {
+      throw new Error('No category list returned.')
+    }
   }
 }
 </script>
