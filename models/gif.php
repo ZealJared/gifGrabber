@@ -124,6 +124,9 @@ class Gif extends Model {
 
   public function getStoragePath(): string
   {
+    if (is_null($this->getId())) {
+      throw new Exception('Tried to get storage path of un-saved Gif.');
+    }
     $path = sprintf(
       '%s/gif/%d',
       Config::getStoragePath(),
@@ -165,6 +168,10 @@ class Gif extends Model {
   protected function hookBeforeSave(): void
   {
     Admin::guard();
+  }
+
+  protected function hookAfterSave(): void
+  {
     if ($this->wasChanged('url')) {
       GifGrabber::grab($this);
     }
@@ -173,5 +180,10 @@ class Gif extends Model {
   protected function hookBeforeDelete(): void
   {
     Admin::guard();
+    $files = glob(sprintf('%s/*', $this->getStoragePath())) ?: [];
+    foreach ($files as $file) {
+      unlink($file);
+    }
+    rmdir($this->getStoragePath());
   }
 }

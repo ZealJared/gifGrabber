@@ -240,9 +240,13 @@ abstract class Model implements JsonSerializable
     return boolval($this->get($key));
   }
 
-  public function getId(): int
+  public function getId(): ?int
   {
-    return $this->getInteger('id');
+    try {
+      return $this->getInteger('id');
+    } catch (Throwable $e) {
+      return null;
+    }
   }
 
   public function save(): void
@@ -251,20 +255,14 @@ abstract class Model implements JsonSerializable
       return;
     }
     $this->hookBeforeSave();
-    $id = null;
-    try {
-      $id = $this->getId();
-    } catch (Throwable $e) {
-      $id = null;
-    }
-    if (is_null($id)) {
+    if (is_null($this->getId())) {
       $this->insert();
     } else {
       $this->update();
     }
     $this->data['updated_at'] = (new DateTime())->format('Y-m-d G:i:s');
-    $this->changed = [];
     $this->hookAfterSave();
+    $this->changed = [];
   }
 
   private function insert(): void
