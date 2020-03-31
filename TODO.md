@@ -7,7 +7,7 @@
     * Read ✓
     * Update ✓
     * Delete ✓
-    * Get GIFs (include unapproved, if admin)
+    * Get GIFs (include unapproved, if admin) ✓
   * Gif
     * Create ✓
     * Read (admin guard unapproved) ✓

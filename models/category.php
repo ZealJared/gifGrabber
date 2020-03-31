@@ -1,9 +1,14 @@
 <?php
+
 namespace GifGrabber;
 
 use DateTime;
 
-class Category extends Model {
+class Category extends Model
+{
+  /** @var array<int,Gif>|null */
+  private $gifList = null;
+
   public static function getTableName(): string
   {
     return 'category';
@@ -37,5 +42,29 @@ class Category extends Model {
   protected function hookBeforeDelete(): void
   {
     Admin::guard();
+  }
+
+  /** @return array<int,Gif> */
+  public function getGifList(): array
+  {
+    if (is_null($this->gifList)) {
+      $sql = sprintf(
+        'SELECT
+        *
+        FROM
+        `%s`
+        WHERE
+        `category_id` = :categoryId
+        %s',
+        Gif::getTableName(),
+        !Request::isAdmin() ? 'AND `approved` = 1' : ''
+      );
+      $statement = Database::getConnection()->prepare($sql);
+      $statement->execute([
+        'categoryId' => $this->getId()
+      ]);
+      $this->gifList = Gif::fromRecords($statement);
+    }
+    return $this->gifList;
   }
 }

@@ -41,6 +41,14 @@ class Request {
     [$userName, $password] = explode(':', $payload);
     return new Auth($userName, $password);
   }
+
+  public static function isAdmin(): bool
+  {
+    return (
+      Request::getAuth()->getUserName() === Config::getAdminUserName()
+      && Request::getAuth()->getPassword() === Config::getAdminPassword()
+    );
+  }
 }
 
 class Auth {
