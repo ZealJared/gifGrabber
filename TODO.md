@@ -19,6 +19,7 @@
 * Strategies
   * Create a strategy for each site in existing database GIFs
 * UI
+  * Admin login
   * Category
     * Create
     * Read
