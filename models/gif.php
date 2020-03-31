@@ -138,31 +138,46 @@ class Gif extends Model {
     return $path;
   }
 
-  public function getImageUrl(): string
+  public function getImageUrl(): ?string
   {
-    return sprintf(
+    $fileName = sprintf(
+      '%s/image.jpg',
+      Config::getStoragePath()
+    );
+    $url = sprintf(
       '%s/gif/%d/image.jpg',
       Config::getStorageUrl(),
       $this->getId()
     );
+    return file_exists($fileName) ? $url : null;
   }
 
-  public function getAnimationUrl(): string
+  public function getAnimationUrl(): ?string
   {
-    return sprintf(
+    $fileName = sprintf(
+      '%s/animation.gif',
+      Config::getStoragePath()
+    );
+    $url = sprintf(
       '%s/gif/%d/animation.gif',
       Config::getStorageUrl(),
       $this->getId()
     );
+    return file_exists($fileName) ? $url : null;
   }
 
-  public function getVideoUrl(): string
+  public function getVideoUrl(): ?string
   {
-    return sprintf(
+    $fileName = sprintf(
+      '%s/video.mp4',
+      Config::getStoragePath()
+    );
+    $url = sprintf(
       '%s/gif/%d/video.mp4',
       Config::getStorageUrl(),
       $this->getId()
     );
+    return file_exists($fileName) ? $url : null;
   }
 
   protected function hookBeforeSave(): void
