@@ -17,8 +17,6 @@
     * hookBeforeDelete remove storage folder and contents for gif ✓
 * Bug
   * Model does not correctly track changed status (update attempts to update all present fields) ✓
-* Strategies
-  * Create a strategy for each site in existing database GIFs
 * UI
   * Admin login
   * Category
@@ -31,3 +29,5 @@
     * Read
     * Update
     * Delete
+* Strategies
+  * Create a strategy for each site in existing database GIFs
