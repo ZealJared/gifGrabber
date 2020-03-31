@@ -28,4 +28,14 @@ class Category extends Model {
   {
     $this->setString('name', $name);
   }
+
+  protected function hookBeforeSave(): void
+  {
+    Admin::guard();
+  }
+
+  protected function hookBeforeDelete(): void
+  {
+    Admin::guard();
+  }
 }

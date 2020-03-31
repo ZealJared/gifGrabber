@@ -29,6 +29,39 @@ class Request {
 
   public static function getOrigin(): string
   {
-    return strval($_SERVER['HTTP_ORIGIN']);
+    return strval($_SERVER['HTTP_ORIGIN'] ?? '');
+  }
+
+  public static function getAuth(): Auth
+  {
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    /** @var string */
+    $token = preg_replace('~^Basic ~', '', $authHeader);
+    $payload = base64_decode($token) ?: ':';
+    [$userName, $password] = explode(':', $payload);
+    return new Auth($userName, $password);
+  }
+}
+
+class Auth {
+  /** @var string */
+  private $userName = '';
+  /** @var string */
+  private $password = '';
+
+  public function __construct(string $userName, string $password)
+  {
+    $this->userName = $userName;
+    $this->password = $password;
+  }
+
+  public function getUserName(): string
+  {
+    return $this->userName;
+  }
+
+  public function getPassword(): string
+  {
+    return $this->password;
   }
 }

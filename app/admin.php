@@ -1,9 +1,13 @@
 <?php
 namespace GifGrabber;
 
+use Exception;
+
 class Admin {
   public static function guard(): void
   {
-    // TODO: if admin token not present in authorize header, fail with exception
+    if (Request::getAuth()->getUserName() !== Config::getAdminUserName() || Request::getAuth()->getPassword() !== Config::getAdminPassword()) {
+      throw new Exception('User must be admin to perform this action.');
+    }
   }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use GifGrabber\Admin;
 use GifGrabber\Gif;
 use GifGrabber\Response;
 use GifGrabber\RouteHandler;
@@ -11,6 +12,9 @@ class GifReadRouteHandler extends RouteHandler
   public function handle(RouteParameters $params): Response
   {
     $gif = Gif::findById($params->getInteger('id'));
+    if (!$gif->getApproved()) {
+      Admin::guard();
+    }
 
     $response = new Response();
     $response->setDataObject((object)[

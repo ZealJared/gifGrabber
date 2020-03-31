@@ -60,4 +60,14 @@ class Config {
       'http://localhost:8080'
     ];
   }
+
+  public static function getAdminUserName(): string
+  {
+    return 'admin@physicspdx.com';
+  }
+
+  public static function getAdminPassword(): string
+  {
+    return '***REMOVED***';
+  }
 }

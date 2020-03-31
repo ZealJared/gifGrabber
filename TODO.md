@@ -7,9 +7,10 @@
     * Read ✓
     * Update ✓
     * Delete ✓
+    * Get GIFs (include unapproved, if admin)
   * Gif
     * Create ✓
-    * Read ✓
+    * Read (admin guard unapproved) ✓
     * Update ✓
     * Delete ✓
     * hookBeforeSave if Url changing (get asset from URL and save -- gif, mp4, preview jpg) ✓

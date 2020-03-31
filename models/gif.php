@@ -164,8 +164,14 @@ class Gif extends Model {
 
   protected function hookBeforeSave(): void
   {
+    Admin::guard();
     if ($this->wasChanged('url')) {
       GifGrabber::grab($this);
     }
+  }
+
+  protected function hookBeforeDelete(): void
+  {
+    Admin::guard();
   }
 }
