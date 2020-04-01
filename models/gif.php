@@ -142,7 +142,7 @@ class Gif extends Model {
   {
     $fileName = sprintf(
       '%s/image.jpg',
-      Config::getStoragePath()
+      $this->getStoragePath()
     );
     $url = sprintf(
       '%s/gif/%d/image.jpg',
@@ -156,7 +156,7 @@ class Gif extends Model {
   {
     $fileName = sprintf(
       '%s/animation.gif',
-      Config::getStoragePath()
+      $this->getStoragePath()
     );
     $url = sprintf(
       '%s/gif/%d/animation.gif',
@@ -170,7 +170,7 @@ class Gif extends Model {
   {
     $fileName = sprintf(
       '%s/video.mp4',
-      Config::getStoragePath()
+      $this->getStoragePath()
     );
     $url = sprintf(
       '%s/gif/%d/video.mp4',
