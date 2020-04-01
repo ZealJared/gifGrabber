@@ -23,14 +23,14 @@
   * Category
     * List ✓
     * List GIFs ✓
-    * Read ✓
+    * Read
     * Create
     * Update
     * Delete
   * Gif
-    * Create
-    * Read
-    * Update
-    * Delete
+    * Create ✓
+    * Read ✓
+    * Update ✓
+    * Delete ✓
 * Strategies
   * Create a strategy for each site in existing database GIFs
