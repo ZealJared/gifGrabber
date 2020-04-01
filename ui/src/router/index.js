@@ -12,24 +12,45 @@ const routes = [
     }
   },
   {
-    path: '/admin',
+    path: '/login',
     name: 'adminLogin',
     component: function () {
       return import('../views/adminLogin.vue')
     }
   },
   {
-    path: '/category/:categoryId',
+    path: '/category/:categoryId/gifs',
     name: 'categoryGifList',
     component: function () {
       return import('../views/categoryGifList.vue')
     }
   },
   {
-    path: '/gif/:gifId',
+    path: '/gif/:gifId/view',
     name: 'gifView',
     component: function () {
       return import('../views/gifView.vue')
+    }
+  },
+  {
+    path: '/gif/:gifId/edit',
+    name: 'gifEdit',
+    component: function () {
+      return import('../views/gifEdit.vue')
+    }
+  },
+  {
+    path: '/gif/add',
+    name: 'gifCreate',
+    component: function () {
+      return import('../views/gifEdit.vue')
+    }
+  },
+  {
+    path: '/gif/:gifId/delete',
+    name: 'gifDelete',
+    component: function () {
+      return import('../views/gifDelete.vue')
     }
   }
 ]
