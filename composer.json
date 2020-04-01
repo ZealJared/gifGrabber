@@ -17,5 +17,9 @@
             "routes/",
             "strategies/"
         ]
+    },
+    "scripts": {
+        "start": "cd ui && start /b npm run serve && cd ../public && php -S localhost:3000",
+        "stop": "taskkill /f /im node.exe && taskkill /f /im php.exe"
     }
 }
