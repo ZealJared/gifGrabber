@@ -17,6 +17,20 @@ const routes = [
     component: function () {
       return import('../views/adminLogin.vue')
     }
+  },
+  {
+    path: '/category/:categoryId',
+    name: 'categoryGifList',
+    component: function () {
+      return import('../views/categoryGifList.vue')
+    }
+  },
+  {
+    path: '/gif/:gifId',
+    name: 'gifView',
+    component: function () {
+      return import('../views/gifView.vue')
+    }
   }
 ]
 

@@ -19,11 +19,12 @@
   * Model does not correctly track changed status (update attempts to update all present fields) ✓
 * UI
   * Admin login ✓
+  * Store login credentials in localStorage
   * Category
     * List ✓
-    * List GIFs
+    * List GIFs ✓
+    * Read ✓
     * Create
-    * Read
     * Update
     * Delete
   * Gif

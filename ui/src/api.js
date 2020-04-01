@@ -53,4 +53,16 @@ export default class Api {
     this.userName = userName
     this.password = password
   }
+
+  getGifList (categoryId) {
+    return this.getRequest(`category/${categoryId}/gif`)
+  }
+
+  getGif (gifId) {
+    return this.getRequest(`gif/${gifId}`)
+  }
+
+  loggedIn () {
+    return this.userName !== null && this.password !== null
+  }
 }

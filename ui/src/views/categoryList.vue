@@ -1,6 +1,8 @@
 <template>
-  <ul>
-    <li v-for="(category, index) in categoryList" :key="index">{{ category.Name }}</li>
+  <ul class="list-group">
+    <li class="list-group-item" v-for="(category, index) in categoryList" :key="index">
+      <router-link :to="{ name: 'categoryGifList', params: { categoryId: category.Id } }">{{ category.Name }}</router-link>
+    </li>
   </ul>
 </template>
 
