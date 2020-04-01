@@ -180,7 +180,14 @@ class Gif extends Model {
     return file_exists($fileName) ? $url : null;
   }
 
-  protected function hookBeforeSave(): void
+  protected function hookBeforeInsert(): void
+  {
+    if ($this->getApproved()) {
+      Admin::guard();
+    }
+  }
+
+  protected function hookBeforeUpdate(): void
   {
     Admin::guard();
   }
