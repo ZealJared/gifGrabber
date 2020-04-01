@@ -18,8 +18,10 @@
 * Bug
   * Model does not correctly track changed status (update attempts to update all present fields) ✓
 * UI
-  * Admin login
+  * Admin login ✓
   * Category
+    * List ✓
+    * List GIFs
     * Create
     * Read
     * Update
