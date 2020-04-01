@@ -18,7 +18,7 @@ export default class Api {
       options.headers.append('Authorization', authorization)
     }
     if (body) {
-      options.body = body
+      options.body = JSON.stringify(body)
     }
     const response = await window.fetch(`${this.baseUrl}/${url}`, options)
     const text = await response.text()
@@ -32,6 +32,7 @@ export default class Api {
       throw new Error(text)
     }
     if (object.errors) {
+      this.store.commit('setErrors', object.errors)
       throw new Error(object.errors[0])
     }
     return object
@@ -60,6 +61,18 @@ export default class Api {
 
   getGif (gifId) {
     return this.getRequest(`gif/${gifId}`)
+  }
+
+  gifCreate (gif) {
+    return this.postRequest('gif', gif)
+  }
+
+  gifUpdate (gif) {
+    return this.postRequest(`gif/${gif.Id}`, gif)
+  }
+
+  gifDelete (gifId) {
+    return this.getRequest(`gif/${gifId}/delete`)
   }
 
   loggedIn () {
