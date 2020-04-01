@@ -10,12 +10,33 @@
           <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'home' }" exact>
             <a class="nav-link" href="#">Home</a>
           </router-link>
+          <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'gifCreate' }" exact>
+            <a class="nav-link" href="#">Add GIF</a>
+          </router-link>
           <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'adminLogin' }" exact>
             <a class="nav-link" href="#">Admin Login</a>
           </router-link>
         </ul>
       </div>
     </nav>
-    <router-view class="container mt-5 mb-5"/>
+    <div class="container mt-5 mb-5">
+      <div class="alert alert-danger" v-for="(error, index) in errors" :key="index">{{ error }}</div>
+      <router-view :key="$route.fullPath"/>
+    </div>
   </div>
 </template>
+
+<script>
+export default {
+  computed: {
+    errors () {
+      return this.$store.getters.errors
+    }
+  },
+  watch: {
+    $route (to, from) {
+      this.$store.commit('setErrors', [])
+    }
+  }
+}
+</script>
