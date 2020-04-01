@@ -12,6 +12,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 if (in_array(Request::getOrigin(), Config::getAllowedOrigins())) {
   header(sprintf('Access-Control-Allow-Origin: %s', Request::getOrigin()));
 }
+header(sprintf('Access-Control-Allow-Headers: %s', implode(', ', [
+  'Authorization'
+])));
 
 $routeFiles = glob('../routes/*') ?: [];
 

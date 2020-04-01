@@ -3,11 +3,19 @@ export default class Api {
     this.baseUrl = 'http://localhost:3000'
     this.router = router
     this.store = store
+    this.userName = null
+    this.password = null
   }
 
   async request (url, method = 'GET', body = null) {
     const options = {
-      method: method
+      method: method,
+      headers: new Headers()
+    }
+    if (this.userName && this.password) {
+      const token = btoa(`${this.userName}:${this.password}`)
+      const authorization = `Basic ${token}`
+      options.headers.append('Authorization', authorization)
     }
     if (body) {
       options.body = body
@@ -39,5 +47,10 @@ export default class Api {
 
   getCategoryList () {
     return this.getRequest('category')
+  }
+
+  adminLogin (userName, password) {
+    this.userName = userName
+    this.password = password
   }
 }

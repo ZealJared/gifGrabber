@@ -1,8 +1,21 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'home' }">Home</router-link>
-    </div>
-    <router-view/>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">GifGrabber</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'home' }" exact>
+            <a class="nav-link" href="#">Home</a>
+          </router-link>
+          <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'adminLogin' }" exact>
+            <a class="nav-link" href="#">Admin Login</a>
+          </router-link>
+        </ul>
+      </div>
+    </nav>
+    <router-view class="container mt-5 mb-5"/>
   </div>
 </template>
