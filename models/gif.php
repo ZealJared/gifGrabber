@@ -85,18 +85,25 @@ class Gif extends Model {
 
   public function setUrl(string $url): void
   {
-    if (parse_url($url) === false) {
+    $correctedUrl = $url;
+    if (preg_match('~^//~', $correctedUrl)) {
+      $correctedUrl = sprintf('https:%s', $correctedUrl);
+    }
+    if (!preg_match('~^http~', $correctedUrl)) {
+      $correctedUrl = sprintf('https://%s', $correctedUrl);
+    }
+    if (parse_url($correctedUrl) === false) {
       throw new Exception('Provided URL is invalid.');
     }
-    $headers = get_headers($url, 1);
+    $headers = get_headers($correctedUrl, 1);
     if ($headers === false) {
       throw new Exception(sprintf('Could not reach URL: %s', $url));
     }
     $integerKeyHeaders = array_filter($headers, function ($key) { return is_int($key); }, ARRAY_FILTER_USE_KEY);
     if (array_pop($integerKeyHeaders) !== 'HTTP/1.1 200 OK') {
-      throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $url));
+      throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $correctedUrl));
     }
-    $this->setString('url', $url);
+    $this->setString('url', $correctedUrl);
   }
 
   public function getFileType(): string
