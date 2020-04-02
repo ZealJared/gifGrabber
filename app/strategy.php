@@ -47,9 +47,9 @@ abstract class Strategy {
       return false;
     }
     $this->gif = $gif;
+    $this->saveVideo();
     $this->saveImage();
     $this->saveGif();
-    $this->saveVideo();
     return true;
   }
 }
