@@ -1,4 +1,5 @@
 * Link back to gif category from Gif view page ✓
+* 'Random' button in category list to show random gif from category
 
 # Create a strategy for each site in existing database GIFs
 
