@@ -23,10 +23,10 @@
   * Category
     * List ✓
     * List GIFs ✓
-    * Read
-    * Create
-    * Update
-    * Delete
+    * Read ✓
+    * Create ✓
+    * Update ✓
+    * Delete ✓
   * Gif
     * Create ✓
     * Read ✓
