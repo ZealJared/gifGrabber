@@ -1,9 +1,9 @@
 <?php
+
 namespace GifGrabber;
 
-use Exception;
-
-class ImgurStrategy extends Strategy {
+class ImgurStrategy extends Strategy
+{
   protected function getPattern(): string
   {
     return '~^(?:https?://(?:[^/]+?\.)*?)?imgur\.com~';
@@ -13,7 +13,12 @@ class ImgurStrategy extends Strategy {
   {
     $matches = [];
     preg_match('~property="og:video"\s+content="([^"]+?\.mp4)"~', $this->getPageContent(), $matches);
-    $videoUrl = $matches[1];
+    if (!empty($matches[1])) {
+      $videoUrl = $matches[1];
+    } else {
+      preg_match('~<meta name="twitter:player:stream"\s+content="([^"]+\.mp4)" />~', $this->getPageContent(), $matches);
+      $videoUrl = $matches[1];
+    }
     copy($videoUrl, sprintf('%s/video.mp4', $this->getGif()->getStoragePath()));
   }
 
