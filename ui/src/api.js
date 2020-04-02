@@ -12,8 +12,8 @@ export default class Api {
       method: method,
       headers: new Headers()
     }
-    if (this.userName && this.password) {
-      const token = btoa(`${this.userName}:${this.password}`)
+    if (this.loggedIn()) {
+      const token = btoa(`${this.getUserName()}:${this.getPassword()}`)
       const authorization = `Basic ${token}`
       options.headers.append('Authorization', authorization)
     }
@@ -50,9 +50,33 @@ export default class Api {
     return this.getRequest('category')
   }
 
-  adminLogin (userName, password) {
+  setUserName (userName) {
+    window.localStorage.setItem('userName', userName)
     this.userName = userName
+  }
+
+  getUserName () {
+    if (!this.userName) {
+      this.setUserName(window.localStorage.getItem('userName'))
+    }
+    return this.userName
+  }
+
+  setPassword (password) {
+    window.localStorage.setItem('password', password)
     this.password = password
+  }
+
+  getPassword () {
+    if (!this.password) {
+      this.setPassword(window.localStorage.getItem('password'))
+    }
+    return this.password
+  }
+
+  adminLogin (userName, password) {
+    this.setUserName(userName)
+    this.setPassword(password)
   }
 
   getGifList (categoryId) {
@@ -76,6 +100,6 @@ export default class Api {
   }
 
   loggedIn () {
-    return this.userName !== null && this.password !== null
+    return this.getUserName() !== 'null' && this.getPassword() !== 'null'
   }
 }
