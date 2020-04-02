@@ -1,12 +1,10 @@
 <?php
 namespace GifGrabber;
 
-use Exception;
-
 class GfyCatStrategy extends Strategy {
   protected function getPattern(): string
   {
-    return '~^https?://gfycat\.com~';
+    return '~^(?:https?://(?:[^/]+?\.)*?)?gfycat\.com~';
   }
 
   protected function saveImage(): void
