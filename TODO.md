@@ -1,6 +1,8 @@
+* Link back to gif category from Gif view page ✓
+
 # Create a strategy for each site in existing database GIFs
 
-* https://imgur.com/p56yhlS
+* https://imgur.com/p56yhlS ✓
 
 * Generic image: https://xkcd.com/1732/
 

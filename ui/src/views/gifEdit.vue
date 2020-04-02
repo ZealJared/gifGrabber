@@ -43,12 +43,15 @@ export default {
         Url: '',
         Approved: false
       },
-      categoryList: [],
-      loggedIn: false
+      categoryList: []
+    }
+  },
+  computed: {
+    loggedIn () {
+      return this.$store.getters.loggedIn
     }
   },
   async mounted () {
-    this.loggedIn = this.$api.loggedIn()
     const categoryResponse = await this.$api.getCategoryList()
     if (categoryResponse.data.category) {
       this.categoryList = categoryResponse.data.category

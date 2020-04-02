@@ -1,5 +1,6 @@
 <template>
   <div v-if="gif">
+    <router-link :to="{ name: 'categoryGifList', params: { categoryId: gif.CategoryId } }">&lt; Back</router-link>
     <div class="d-flex justify-content-between align-items-center">
       <h1>{{ gif.Title }}{{ !gif.Approved ? ' (unapproved)' : '' }}</h1>
       <router-link v-if="loggedIn" class="btn btn-primary" :to="{ name: 'gifEdit', params: { gifId: gif.Id } }">Edit</router-link>
@@ -29,13 +30,16 @@
 export default {
   data () {
     return {
-      loggedIn: false,
       gif: null,
       format: 'image'
     }
   },
+  computed: {
+    loggedIn () {
+      return this.$store.getters.loggedIn
+    }
+  },
   async mounted () {
-    this.loggedIn = this.$api.loggedIn()
     const response = await this.$api.getGif(this.$route.params.gifId)
     if (response.data.gif) {
       this.gif = response.data.gif

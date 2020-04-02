@@ -21,9 +21,8 @@ export default {
     }
   },
   async mounted () {
-    this.loggedIn = this.$api.loggedIn()
     if (this.$route.params.categoryId) {
-      if (!this.loggedIn) {
+      if (!this.$store.getters.loggedIn) {
         return
       }
       const categoryResponse = await this.$api.getCategory(this.$route.params.categoryId)

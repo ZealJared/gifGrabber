@@ -53,6 +53,7 @@ export default class Api {
   setUserName (userName) {
     window.localStorage.setItem('userName', userName)
     this.userName = userName
+    this.loggedIn()
   }
 
   getUserName () {
@@ -65,6 +66,7 @@ export default class Api {
   setPassword (password) {
     window.localStorage.setItem('password', password)
     this.password = password
+    this.loggedIn()
   }
 
   getPassword () {
@@ -116,6 +118,12 @@ export default class Api {
   }
 
   loggedIn () {
-    return this.getUserName() !== 'null' && this.getPassword() !== 'null'
+    this.store.commit('loggedIn', this.getUserName() !== 'null' && this.getPassword() !== 'null')
+    return this.store.getters.loggedIn
+  }
+
+  logOut () {
+    this.setUserName(null)
+    this.setPassword(null)
   }
 }

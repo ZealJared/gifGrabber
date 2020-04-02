@@ -14,12 +14,15 @@
 export default {
   data () {
     return {
-      categoryList: [],
-      loggedIn: false
+      categoryList: []
+    }
+  },
+  computed: {
+    loggedIn () {
+      return this.$store.getters.loggedIn
     }
   },
   async mounted () {
-    this.loggedIn = this.$api.loggedIn()
     const response = await this.$api.getCategoryList()
     if (response.data.category) {
       this.categoryList = response.data.category

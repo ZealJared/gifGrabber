@@ -16,6 +16,9 @@
           <router-link tag="li" class="nav-item" active-class="active" :to="{ name: 'adminLogin' }" exact>
             <a class="nav-link" href="#">Admin Login</a>
           </router-link>
+          <li class="nav-item" v-if="loggedIn">
+            <a class="nav-link" href="#" @click.prevent="logOut()">Log Out</a>
+          </li>
         </ul>
       </div>
     </nav>
@@ -31,11 +34,19 @@ export default {
   computed: {
     errors () {
       return this.$store.getters.errors
+    },
+    loggedIn () {
+      return this.$store.getters.loggedIn
     }
   },
   watch: {
     $route (to, from) {
       this.$store.commit('setErrors', [])
+    }
+  },
+  methods: {
+    logOut () {
+      this.$api.logOut()
     }
   }
 }

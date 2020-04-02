@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    errors: []
+    errors: [],
+    loggedIn: false
   },
   getters: {
     errors (state) {
       return state.errors || []
+    },
+    loggedIn (state) {
+      return state.loggedIn
     }
   },
   mutations: {
@@ -17,6 +21,9 @@ export default new Vuex.Store({
       if (Array.isArray(payload)) {
         state.errors = payload
       }
+    },
+    loggedIn (state, payload) {
+      state.loggedIn = payload
     }
   },
   actions: {
