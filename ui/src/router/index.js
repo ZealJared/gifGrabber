@@ -52,6 +52,27 @@ const routes = [
     component: function () {
       return import('../views/gifDelete.vue')
     }
+  },
+  {
+    path: '/category/add',
+    name: 'categoryCreate',
+    component: function () {
+      return import('../views/categoryEdit.vue')
+    }
+  },
+  {
+    path: '/category/:categoryId/edit',
+    name: 'categoryEdit',
+    component: function () {
+      return import('../views/categoryEdit.vue')
+    }
+  },
+  {
+    path: '/category/:categoryId/delete',
+    name: 'categoryDelete',
+    component: function () {
+      return import('../views/categoryDelete.vue')
+    }
   }
 ]
 

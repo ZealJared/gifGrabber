@@ -8,8 +8,6 @@ export default {
     const gifResponse = await this.$api.gifDelete(this.$route.params.gifId)
     if (gifResponse.data.gif) {
       this.$router.replace({ name: 'categoryGifList', params: { categoryId: gifResponse.data.gif.CategoryId } })
-    } else {
-      throw new Error(gifResponse.errors[0])
     }
   }
 }

@@ -87,16 +87,32 @@ export default class Api {
     return this.getRequest(`gif/${gifId}`)
   }
 
+  getCategory (categoryId) {
+    return this.getRequest(`category/${categoryId}`)
+  }
+
   gifCreate (gif) {
     return this.postRequest('gif', gif)
+  }
+
+  categoryCreate (category) {
+    return this.postRequest('category', category)
   }
 
   gifUpdate (gif) {
     return this.postRequest(`gif/${gif.Id}`, gif)
   }
 
+  categoryUpdate (category) {
+    return this.postRequest(`category/${category.Id}`, category)
+  }
+
   gifDelete (gifId) {
     return this.getRequest(`gif/${gifId}/delete`)
+  }
+
+  categoryDelete (categoryId) {
+    return this.getRequest(`category/${categoryId}/delete`)
   }
 
   loggedIn () {
