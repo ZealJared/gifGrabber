@@ -32,7 +32,20 @@ class GenericStrategy extends Strategy
       $this->videoSaved = true;
       return;
     }
-    // if mp4 note found, try to find m3u8 playlist
+    // try to find reddit gif mp4
+    $matches = [];
+    preg_match('~[\'"]([^\'"]+?\.gif\?format=mp4(?:\&[^\'"]+)?)[\'"]~', $this->getPageContent(), $matches);
+    $videoUrl = $matches[1] ?? null;
+    // if mp4 found
+    if (!is_null($videoUrl)) {
+      $videoUrl = htmlspecialchars_decode($videoUrl);
+      // copy to local storage
+      copy($videoUrl, sprintf('%s/video.mp4', $this->getGif()->getStoragePath()));
+      // mark video as saved
+      $this->videoSaved = true;
+      return;
+    }
+    // if mp4 not found, try to find m3u8 playlist
     preg_match('~[\'"]([^\'"]+?\.m3u8(?:\?[^\'"]+)?)[\'"]~', $this->getPageContent(), $matches);
     $videoUrl = $matches[1] ?? null;
     // if no playlist found, do not attempt to save video
@@ -97,9 +110,10 @@ class GenericStrategy extends Strategy
     }
     // if page has og:image, use that
     $matches = [];
-    preg_match('~<meta\s+property="og:image"\s+content="([^"]+\.(?:png|jpg|jpeg))">~', $this->getPageContent(), $matches);
+    preg_match('~<meta\s+property="og:image"\s+content="([^"]+\.(?:png|jpg|jpeg)(?:\?[^"]+)?)"~', $this->getPageContent(), $matches);
     $imageUrl = $matches[1] ?? null;
     if (!is_null($imageUrl)) {
+      $imageUrl = htmlspecialchars_decode($imageUrl);
       // if png, convert
       $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
       $destinationJpg = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
@@ -151,6 +165,7 @@ class GenericStrategy extends Strategy
     preg_match('~[\'"]([^\'"]+?\.gif(?:\?[^\'"]+)?)[\'"]~', $this->getPageContent(), $matches);
     $animationUrl = $matches[1] ?? null;
     if (!is_null($animationUrl)) {
+      $animationUrl = htmlspecialchars_decode($animationUrl);
       copy($animationUrl, sprintf('%s/animation.gif', $this->getGif()->getStoragePath()));
       $this->animationSaved = true;
       if (!$this->imageSaved) {
@@ -163,6 +178,7 @@ class GenericStrategy extends Strategy
         ));
         $this->imageSaved = true;
       }
+      // TODO: convert GIF to mp4
       return;
     }
   }
