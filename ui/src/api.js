@@ -1,6 +1,8 @@
+import config from './config'
+
 export default class Api {
   constructor (router, store) {
-    this.baseUrl = 'http://localhost:3000'
+    this.baseUrl = config.baseUrl
     this.router = router
     this.store = store
     this.userName = null
