@@ -120,12 +120,11 @@ class GenericStrategy extends Strategy
       if ($extension === 'png') {
         $destinationPng = sprintf('%s/image.png', $this->getGif()->getStoragePath());
         copy($imageUrl, $destinationPng);
-        $image = new Imagick($destinationPng);
-        $white=new Imagick();
-        $white->newImage($image->getImageWidth(), $image->getImageHeight(), "white");
-        $white->compositeimage($image, Imagick::COMPOSITE_OVER, 0, 0);
-        $white->setImageFormat('jpg');
-        $white->writeImage($destinationJpg);
+        exec(sprintf(
+          'gm convert -background white -resize 15000x15000\> %s %s',
+          $destinationPng,
+          $destinationJpg
+        ));
       } else {
         copy($imageUrl, $destinationJpg);
       }
