@@ -5,13 +5,13 @@
 
 * https://imgur.com/p56yhlS ✓
 
-* Generic image: https://xkcd.com/1732/
+* Generic image: https://xkcd.com/1732/ ✓
 
-* Generic mp4: https://deadspin.com/scottish-golf-course-to-u-s-opens-windy-conditions-1826889294
+* Generic mp4: https://deadspin.com/scottish-golf-course-to-u-s-opens-windy-conditions-1826889294 ✓
 
   * Get \<video> poster as image if exists (convert to jpg if not already)
 
-* Generic m3u8: https://www.reddit.com/r/EngineeringPorn/comments/8wk5e2/boat_stabiliser
+* Generic m3u8: https://www.reddit.com/r/EngineeringPorn/comments/8wk5e2/boat_stabiliser ✓
 
   * Get \<video> poster as image if exists (convert to jpg if not already)
 

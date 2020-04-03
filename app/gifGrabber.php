@@ -18,6 +18,7 @@ class GifGrabber {
         return;
       }
     }
-    // TODO: try generic strategy here.
+    // try generic strategy here.
+    (new GenericStrategy())->execute($gif);
   }
 }
