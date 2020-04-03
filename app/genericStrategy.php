@@ -121,7 +121,7 @@ class GenericStrategy extends Strategy
         $destinationPng = sprintf('%s/image.png', $this->getGif()->getStoragePath());
         copy($imageUrl, $destinationPng);
         exec(sprintf(
-          'mogrify -monitor -background white -quality 75 -resize 15000x15000\> %s %s',
+          'mogrify -monitor -background white -quality 75 -resize 15000x15000\> %s %s > /dev/null 2>/dev/null &',
           $destinationPng,
           $destinationJpg
         ));
