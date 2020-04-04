@@ -10,10 +10,10 @@
       <li class="nav-item">
         <a class="nav-link" :class="{ active: format === 'image' }" @click.prevent="viewFormat('image')" href="#">Image</a>
       </li>
-      <li class="nav-item">
+      <li v-if="!!gif.AnimationUrl" class="nav-item">
         <a class="nav-link" :class="{ active: format === 'animation' }" @click.prevent="viewFormat('animation')" href="#">Animation</a>
       </li>
-      <li class="nav-item">
+      <li v-if="!!gif.VideoUrl" class="nav-item">
         <a class="nav-link" :class="{ active: format === 'video' }" @click.prevent="viewFormat('video')" href="#">Video</a>
       </li>
     </ul>
