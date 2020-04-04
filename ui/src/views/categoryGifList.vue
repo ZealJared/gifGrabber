@@ -1,14 +1,18 @@
 <template>
   <div>
+    <router-link :to="{ name: 'home' }">&lt; Back</router-link>
     <h1 v-if="category">{{ category.Name }}</h1>
-    <ul v-if="gifList.length > 0" class="list-group">
-      <li class="list-group-item">
-        <router-link class="btn btn-primary" :to="{ name: 'gifView', params: { gifId: randomGifId() } }">Random</router-link>
-      </li>
-      <li class="list-group-item" v-for="(gif, index) in gifList" :key="index">
-        <router-link :to="{ name: 'gifView', params: { gifId: gif.Id } }">{{ gif.Title }}{{ !gif.Approved ? ' (unapproved)' : '' }}</router-link>
-      </li>
-    </ul>
+    <router-link class="btn btn-primary mb-3" :to="{ name: 'gifView', params: { gifId: randomGifId() } }">Random</router-link>
+    <div class="d-flex flex-wrap">
+      <figure v-for="(gif, index) in gifList" :key="index" class="figure mr-3" @focus="animate(index)" @mouseover="animate(index)" @blur="stop" @mouseout="stop">
+        <router-link :to="{ name: 'gifView', params: { gifId: gif.Id } }">
+          <div class="d-flex align-items-center justify-content-around figure-img rounded bg-dark shadowbox">
+            <img :src="animateIndex === index ? gif.AnimationUrl : gif.ImageUrl" :alt="gif.Title" class="img-fluid shadowbox-img" tabindex="-1">
+          </div>
+          <figcaption class="figure-caption">{{ gif.Title }}{{ !gif.Approved ? ' (unapproved)' : '' }}</figcaption>
+        </router-link>
+      </figure>
+    </div>
   </div>
 </template>
 
@@ -16,14 +20,26 @@
 export default {
   data () {
     return {
+      animateIndex: -1,
       category: null,
-      gifList: []
+      gifList: [
+        { Id: 0 }
+      ]
     }
   },
   methods: {
     randomGifId () {
       const index = Math.floor(Math.random() * this.gifList.length)
       return this.gifList[index].Id
+    },
+    animate (index) {
+      if (!this.gifList[index].AnimationUrl) {
+        return
+      }
+      this.animateIndex = index
+    },
+    stop () {
+      this.animateIndex = -1
     }
   },
   async mounted () {
@@ -42,3 +58,15 @@ export default {
   }
 }
 </script>
+
+<style>
+  .shadowbox {
+    width: 320px;
+    height: 320px;
+    overflow: hidden;
+  }
+  .shadowbox-img {
+    max-width: 320px;
+    max-height: 320px;
+  }
+</style>
