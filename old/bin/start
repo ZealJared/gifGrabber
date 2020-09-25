@@ -1,2 +1,0 @@
-#!/bin/bash
-supervisor -i . ./bin/www
