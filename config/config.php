@@ -8,20 +8,20 @@ class Config {
   {
     return 'localhost';
   }
-  
+
   public static function getDatabaseName(): string
   {
     return 'gifgrabber';
   }
-  
+
   public static function getDatabaseUserName(): string
   {
     return 'gifgrabber';
   }
-  
+
   public static function getDatabasePassword(): string
   {
-    return '***REMOVED***';
+    return 'supercrazysweetpassword';
   }
 
   public static function getStorageFolderName(): string
@@ -41,7 +41,7 @@ class Config {
 
   public static function getBaseUrl(): string
   {
-    return 'http://localhost:3000';
+    return 'http://localhost:1080';
   }
 
   public static function getStorageUrl(): string
@@ -63,11 +63,11 @@ class Config {
 
   public static function getAdminUserName(): string
   {
-    return 'admin@physicspdx.com';
+    return 'admin@gif.grabber';
   }
 
   public static function getAdminPassword(): string
   {
-    return '***REMOVED***';
+    return 'feelinglobsterleatherknife';
   }
 }
