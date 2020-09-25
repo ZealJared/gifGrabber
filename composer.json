@@ -1,6 +1,7 @@
 {
     "name": "zeal/gif-grabber",
     "type": "project",
+    "description": "Collect, caption, categorize, and re-host GIFs for your own collection.",
     "authors": [
         {
             "name": "Zeal J Mayfield",
