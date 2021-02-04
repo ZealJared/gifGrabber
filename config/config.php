@@ -41,7 +41,7 @@ class Config {
 
   public static function getBaseUrl(): string
   {
-    return 'http://localhost:1080';
+    return 'http://localhost';
   }
 
   public static function getStorageUrl(): string
