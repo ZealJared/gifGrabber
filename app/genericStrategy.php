@@ -25,9 +25,13 @@ class GenericStrategy extends Strategy
     preg_match('~[\'"]([^\'"]+?\.mp4(?:\?[^\'"]+)?)[\'"]~', $this->getPageContent(), $matches);
     $videoUrl = $matches[1] ?? null;
     // if mp4 found
-    if (!is_null($videoUrl)) {
+    if (!is_null($videoUrl) && strstr($videoUrl, 'ripsave.com') === false) {
       // copy to local storage
-      copy($videoUrl, sprintf('%s/video.mp4', $this->getGif()->getStoragePath()));
+      $destination = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
+      copy($videoUrl, $destination);
       // mark video as saved
       $this->videoSaved = true;
       return;
@@ -40,7 +44,11 @@ class GenericStrategy extends Strategy
     if (!is_null($videoUrl)) {
       $videoUrl = htmlspecialchars_decode($videoUrl);
       // copy to local storage
-      copy($videoUrl, sprintf('%s/video.mp4', $this->getGif()->getStoragePath()));
+      $destination = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
+      copy($videoUrl, $destination);
       // mark video as saved
       $this->videoSaved = true;
       return;
@@ -58,7 +66,7 @@ class GenericStrategy extends Strategy
     $playListData = file_get_contents($videoUrl) ?: '';
     // find first (highest quality) video playlist
     $matches = [];
-    preg_match('~\n([^,]+\.m3u8)~', $playListData, $matches);
+    preg_match('~\n([^,#]+\.m3u8)~', $playListData, $matches);
     $videoUrl = $matches[1] ?? null;
     // if not found, do not try to save video
     if (is_null($videoUrl)) {
@@ -79,13 +87,20 @@ class GenericStrategy extends Strategy
     $videoUrl = sprintf('%s/%s', $base, $videoUrl);
     $destinationTs = sprintf('%s/video.ts', $this->getGif()->getStoragePath());
     $destinationMp4 = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
+    if(file_exists($destinationTs)){
+      unlink($destinationTs);
+    }
     copy($videoUrl, $destinationTs);
     // convert TS to MP4
-    exec(sprintf(
+    $command = sprintf(
       'ffmpeg -i %s -c:v libx264 -c:a aac %s',
       $destinationTs,
       $destinationMp4
-    ));
+    );
+    if(file_exists($destinationMp4)){
+      unlink($destinationMp4);
+    }
+    exec($command);
     // mark video as saved
     $this->videoSaved = true;
     return;
@@ -100,6 +115,9 @@ class GenericStrategy extends Strategy
     if ($this->videoSaved) {
       $mp4 = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
       $destination = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
       exec(sprintf(
         'ffmpeg -i %s -vframes 1 %s',
         $mp4,
@@ -119,12 +137,18 @@ class GenericStrategy extends Strategy
       $destinationJpg = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
       if ($extension === 'png') {
         $destinationPng = sprintf('%s/image.png', $this->getGif()->getStoragePath());
+        if(file_exists($destinationPng)){
+          unlink($destinationPng);
+        }
         copy($imageUrl, $destinationPng);
         exec(sprintf(
           'mogrify -monitor -background white -quality 75 -resize 15000x15000\> -format jpg %s > /dev/null 2>/dev/null &',
           $destinationPng
         ));
       } else {
+        if(file_exists($destinationJpg)){
+          unlink($destinationJpg);
+        }
         copy($imageUrl, $destinationJpg);
       }
       $this->imageSaved = true;
@@ -135,7 +159,11 @@ class GenericStrategy extends Strategy
     preg_match('~[\'"]([^\'"]+?\.jpg(?:\?[^\'"]+)?)[\'"]~', $this->getPageContent(), $matches);
     $imageUrl = $matches[1] ?? null;
     if (!is_null($imageUrl)) {
-      copy($imageUrl, sprintf('%s/image.jpg', $this->getGif()->getStoragePath()));
+      $destination = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
+      copy($imageUrl, $destination);
       $this->imageSaved = true;
       return;
     }
@@ -151,6 +179,9 @@ class GenericStrategy extends Strategy
     if ($this->videoSaved) {
       $mp4 = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
       $destination = sprintf('%s/animation.gif', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
       exec(sprintf(
         'ffmpeg -i %s -vf "fps=12,scale=320:-1" -loop 0 %s',
         $mp4,
@@ -164,11 +195,18 @@ class GenericStrategy extends Strategy
     $animationUrl = $matches[1] ?? null;
     if (!is_null($animationUrl)) {
       $animationUrl = htmlspecialchars_decode($animationUrl);
-      copy($animationUrl, sprintf('%s/animation.gif', $this->getGif()->getStoragePath()));
+      $destination = sprintf('%s/animation.gif', $this->getGif()->getStoragePath());
+      if(file_exists($destination)){
+        unlink($destination);
+      }
+      copy($animationUrl, $destination);
       $this->animationSaved = true;
       if (!$this->imageSaved) {
         $gif = sprintf('%s/animation.gif', $this->getGif()->getStoragePath());
         $destination = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
+        if(file_exists($destination)){
+          unlink($destination);
+        }
         exec(sprintf(
           'ffmpeg -i %s -vframes 1 %s',
           $gif,
