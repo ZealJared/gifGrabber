@@ -142,7 +142,7 @@ class GenericStrategy extends Strategy
         }
         copy($imageUrl, $destinationPng);
         $command = sprintf(
-          'mogrify -monitor -background white -quality 75 -resize 15000x15000\> -format jpg %s > /dev/null 2>/dev/null &',
+          'gm mogrify -resize 15000x15000\> -background white -extent 0x0 -format jpg -quality 75 %s',
           $destinationPng
         );
         exec($command);
