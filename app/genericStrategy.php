@@ -141,10 +141,11 @@ class GenericStrategy extends Strategy
           unlink($destinationPng);
         }
         copy($imageUrl, $destinationPng);
-        exec(sprintf(
+        $command = sprintf(
           'mogrify -monitor -background white -quality 75 -resize 15000x15000\> -format jpg %s > /dev/null 2>/dev/null &',
           $destinationPng
-        ));
+        );
+        exec($command);
       } else {
         if(file_exists($destinationJpg)){
           unlink($destinationJpg);
