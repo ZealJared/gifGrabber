@@ -12,15 +12,8 @@
     "require": {},
     "autoload": {
         "classmap": [
-            "app/",
-            "config/",
-            "models/",
-            "routes/",
-            "strategies/"
+            "src/",
+            "public/"
         ]
-    },
-    "scripts": {
-        "start": "cd ui && start /b npm run serve && cd ../public && php -S localhost:1080",
-        "stop": "taskkill /f /im node.exe && taskkill /f /im php.exe"
     }
 }

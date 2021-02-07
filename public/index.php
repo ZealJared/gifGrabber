@@ -16,7 +16,7 @@ header(sprintf('Access-Control-Allow-Headers: %s', implode(', ', [
   'Authorization'
 ])));
 
-$routeFiles = glob('../routes/*') ?: [];
+$routeFiles = glob('../src/routes/*') ?: [];
 
 foreach($routeFiles as $routeFile)
 {

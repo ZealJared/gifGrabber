@@ -31,7 +31,7 @@ class Config {
 
   public static function getStoragePath(): string
   {
-    $path = realpath(sprintf('../public/%s/', self::getStorageFolderName()));
+    $path = realpath(sprintf('%s/../../public/%s/', __DIR__, self::getStorageFolderName()));
     if($path === false)
     {
       throw new Exception('Storage folder not found.');
