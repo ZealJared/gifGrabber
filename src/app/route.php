@@ -41,7 +41,7 @@ null $params = null;
     if (empty($matchResult)) {
       return false;
     }
-    Utility::assertNamedStringCollection($matches);
+    $matches = Utility::getNamedStringCollection($matches);
     $this->params = new RouteParameters($matches);
     return true;
   }

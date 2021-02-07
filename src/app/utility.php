@@ -32,15 +32,18 @@ class Utility
     return $urlString;
   }
 
-  /** @psalm-assert array<string,string> $array */
-  public static function assertNamedStringCollection(array $array): void
+  /** @return array<string,string> */
+  public static function getNamedStringCollection(array $array): array
   {
-    foreach (array_keys($array) as $key) {
-      assert(is_string($key));
+    /** @var array<string,string> */
+    $return = [];
+    /** @var mixed $value */
+    foreach ($array as $key => $value) {
+      if (is_string($key) && is_string($value)) {
+        $return[$key] = $value;
+      }
     }
-    foreach ($array as $value) {
-      assert(is_string($value));
-    }
+    return $return;
   }
 
   public static function getFloatIntStringNull(mixed $value): float|int|string|null

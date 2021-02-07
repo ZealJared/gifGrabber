@@ -7,16 +7,17 @@ use Throwable;
 
 class Gif extends Model
 {
-  /** @var Category|null */
-  private $category = null;
+  private Category|
 
-  protected $doNotSet = [
+null $category = null;
+
+  protected array $doNotSet = [
     'ImageUrl',
     'AnimationUrl',
     'VideoUrl',
   ];
 
-  protected $alsoSerialize = [
+  protected array $alsoSerialize = [
     'ImageUrl',
     'AnimationUrl',
     'VideoUrl',
