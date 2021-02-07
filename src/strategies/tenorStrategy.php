@@ -18,6 +18,7 @@ class TenorStrategy extends Strategy
       return;
     }
     $mp4Url = json_decode(sprintf('"%s"', $matches[1]));
+    assert(is_string($mp4Url));
     $this->saveVideo($mp4Url);
   }
 

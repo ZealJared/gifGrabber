@@ -23,6 +23,7 @@ class Response {
     {
       $this->payload->errors = [];
     }
+    assert(is_array($this->payload->errors));
     $this->payload->errors[] = $message;
   }
 

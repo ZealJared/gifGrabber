@@ -7,7 +7,7 @@ use Exception;
 class RouteParameters
 {
   /** @var array<string,string> */
-  private $params;
+  private array $params;
 
   /** @param array<string,string> $params */
   public function __construct(array $params)

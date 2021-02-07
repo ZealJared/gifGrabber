@@ -4,13 +4,11 @@ namespace GifGrabber;
 use Exception;
 
 abstract class Strategy {
-  /** @var Gif|null */
-  private $gif = null;
-  /** @var string|null */
-  private $pageContent = null;
-  protected $videoSaved = false;
-  protected $imageSaved = false;
-  protected $animationSaved = false;
+  private Gif|null $gif = null;
+  private string|null $pageContent = null;
+  protected bool $videoSaved = false;
+  protected bool $imageSaved = false;
+  protected bool $animationSaved = false;
 
   protected function matches(Gif $gif): bool {
     return preg_match($this->getPattern(), $gif->getUrl()) === 1;
@@ -37,7 +35,7 @@ abstract class Strategy {
           'header' => 'Cookie: over18=1\r\n'
         ]
       ]);
-      $pageContent = file_get_contents($this->getGif()->getUrl(), context: $context);
+      $pageContent = file_get_contents($this->getGif()->getUrl(), use_include_path: false, context: $context);
       if ($pageContent === false) {
         throw new Exception(sprintf('Unable to load URL: %s', $this->getGif()->getUrl()));
       }

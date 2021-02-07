@@ -13,17 +13,17 @@ use Throwable;
 abstract class Model implements JsonSerializable
 {
   /** @var array<string,(float|int|string|null)> */
-  private $data = [];
+  private array $data = [];
   /** @var array<string,bool> */
-  private $changed = [];
+  private array $changed = [];
   /** @var array<string,string> */
-  protected $aliases = [];
+  protected array $aliases = [];
   /** @var array<int,string> */
-  protected $alsoSerialize = [];
+  protected array $alsoSerialize = [];
   /** @var array<int,string> */
-  protected $doNotSet = [];
+  protected array $doNotSet = [];
   /** @var array<int,string> */
-  private $doNotEverSet = [
+  private array $doNotEverSet = [
     'Id',
     'CreatedAt',
     'UpdatedAt'
@@ -80,12 +80,15 @@ abstract class Model implements JsonSerializable
   public function jsonSet(object $data = null): void
   {
     if (!is_null($data)) {
+      /** @var mixed $value */
       foreach (get_object_vars($data) as $property => $value) {
         if (in_array($property, $this->doNotSet) || in_array($property, $this->doNotEverSet)) {
           continue;
         }
         $methodName = sprintf('set%s', $property);
         if (is_object($value) && property_exists($value, 'date') && property_exists($value, 'timezone')) {
+          assert(is_string($value->date));
+          assert(is_string($value->timezone));
           $value = new DateTime(sprintf('%s %s', $value->date, $value->timezone));
         }
         $this->$methodName($value);
@@ -93,23 +96,23 @@ abstract class Model implements JsonSerializable
     }
   }
 
-  /** @param array<string,(null|string|float|int)> $data */
-  final public function __construct(array $data = null)
+  final public function __construct(array|null $data = null)
   {
     if (!is_null($data)) {
+      Utility::assertArrayOfFloatIntStringNull($data);
       $this->data = $data;
     }
   }
 
   /**
    * @return array<int,static>
-   * @param PDOStatement<int,array<string,scalar>> $statement
-   * */
+   */
   public static function fromRecords(PDOStatement $statement): array
   {
     $items = [];
     $records = $statement->fetchAll(PDO::FETCH_ASSOC) ?: [];
     foreach ($records as $record) {
+      assert(is_array($record));
       $items[] = new static($record);
     }
     return $items;
@@ -296,7 +299,7 @@ abstract class Model implements JsonSerializable
     ];
     $setStatements = [];
     foreach (array_keys($this->changed) as $key) {
-      $values[$key] = $this->data[$key];
+      $values[$key] = Utility::getFloatIntStringNull($this->data[$key]);
       $setStatements[] = sprintf(
         '`%s` = :%s',
         $key,
@@ -348,7 +351,7 @@ abstract class Model implements JsonSerializable
     $return = new stdClass();
     $fields = !empty($this->getDefaults()) ? array_keys($this->getDefaults()) : array_keys($this->data);
     foreach ($fields as $key) {
-      if (in_array($key, array_keys($this->aliases))) {
+      if (array_key_exists($key, $this->aliases)) {
         $name = $this->aliases[$key];
       } else {
         $name = $this->normalizeKey($key);

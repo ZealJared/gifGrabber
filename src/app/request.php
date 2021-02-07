@@ -6,12 +6,15 @@ use Exception;
 class Request {
   public static function getMethod(): string
   {
-    return $_SERVER['REQUEST_METHOD'];
+    $method = $_SERVER['REQUEST_METHOD'];
+    assert(is_string($method));
+    return $method;
   }
 
   public static function getPath(): string
   {
     $path = $_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'] ?? '/';
+    assert(is_string($path));
     $trimmedPath = preg_replace('~/$~', '', $path);
     return strval($trimmedPath) ?: '/';
   }
@@ -29,13 +32,15 @@ class Request {
 
   public static function getOrigin(): string
   {
-    return strval($_SERVER['HTTP_ORIGIN'] ?? '');
+    $value = $_SERVER['HTTP_ORIGIN'] ?? '';
+    assert(is_string($value));
+    return $value;
   }
 
   public static function getAuth(): Auth
   {
     $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    /** @var string */
+    assert(is_string($authHeader));
     $token = preg_replace('~^Basic ~', '', $authHeader);
     $payload = base64_decode($token) ?: ':';
     [$userName, $password] = explode(':', $payload);

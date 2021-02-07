@@ -96,10 +96,10 @@ class Gif extends Model {
       throw new Exception('Provided URL is invalid.');
     }
     $headers = get_headers($correctedUrl, 1);
-    if ($headers === false) {
+    if (empty($headers)) {
       throw new Exception(sprintf('Could not reach URL: %s', $url));
     }
-    $integerKeyHeaders = array_filter($headers, function ($key) { return is_int($key); }, ARRAY_FILTER_USE_KEY);
+    $integerKeyHeaders = array_filter($headers, function (mixed $key) { return is_int($key); }, ARRAY_FILTER_USE_KEY);
     if (array_pop($integerKeyHeaders) !== 'HTTP/1.1 200 OK') {
       throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $correctedUrl));
     }
@@ -137,7 +137,7 @@ class Gif extends Model {
     $path = sprintf(
       '%s/gif/%d',
       Config::getStoragePath(),
-      $this->getId()
+      $this->getId() ?? 0
     );
     if (!file_exists($path)) {
       mkdir($path, 0777, true);
@@ -154,7 +154,7 @@ class Gif extends Model {
     $url = sprintf(
       '%s/gif/%d/image.jpg',
       Config::getStorageUrl(),
-      $this->getId()
+      $this->getId() ?? 0
     );
     return file_exists($fileName) ? $url : null;
   }
@@ -168,7 +168,7 @@ class Gif extends Model {
     $url = sprintf(
       '%s/gif/%d/animation.gif',
       Config::getStorageUrl(),
-      $this->getId()
+      $this->getId() ?? 0
     );
     return file_exists($fileName) ? $url : null;
   }
@@ -182,7 +182,7 @@ class Gif extends Model {
     $url = sprintf(
       '%s/gif/%d/video.mp4',
       Config::getStorageUrl(),
-      $this->getId()
+      $this->getId() ?? 0
     );
     return file_exists($fileName) ? $url : null;
   }
