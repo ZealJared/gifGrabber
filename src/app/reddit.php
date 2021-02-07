@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 namespace GifGrabber;
 
-class Reddit {
+class Reddit
+{
   public static function findPlaylistInPageSource(string $source): string
   {
     $matches = [];
@@ -40,8 +41,7 @@ class Reddit {
   public static function getTsUrl(string $source): string
   {
     $playlistUrl = Reddit::findPlaylistInPageSource($source);
-    if(!$playlistUrl)
-    {
+    if (!$playlistUrl) {
       return '';
     }
     // error_log(sprintf('Found playlist URL: %s', $playlistUrl));
@@ -49,11 +49,9 @@ class Reddit {
     $maxDepth = 5; // just in case
     $count = 0;
     $tsUrl = '';
-    while(!($tsUrl = self::getTsUrlFromPlaylistData($playlistData, $playlistUrl)) && $count < $maxDepth)
-    {
+    while (!($tsUrl = self::getTsUrlFromPlaylistData($playlistData, $playlistUrl)) && $count < $maxDepth) {
       $playlistUrl = self::getPlaylistUrlFromPlaylistData($playlistData, $playlistUrl);
-      if(!$playlistUrl)
-      {
+      if (!$playlistUrl) {
         break;
       }
       $playlistData = file_get_contents($playlistUrl) ?: '';

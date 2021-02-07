@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
-class GfyCatStrategy extends Strategy {
+class GfyCatStrategy extends Strategy
+{
   protected function getPattern(): string
   {
     return '~^(?:https?://(?:[^/]+?\.)*?)?gfycat\.com~';
@@ -11,8 +12,7 @@ class GfyCatStrategy extends Strategy {
   {
     $matches = [];
     preg_match('~property="og:image" content="([^"]+?\.jpg)"~', $this->getPageContent(), $matches);
-    if(empty($matches[1]))
-    {
+    if (empty($matches[1])) {
       return;
     }
     $imageUrl = $matches[1];
@@ -23,7 +23,7 @@ class GfyCatStrategy extends Strategy {
   {
     $matches = [];
     preg_match('~property="og:image" content="([^"]+?\.gif)"~', $this->getPageContent(), $matches);
-    if(empty($matches[1])){
+    if (empty($matches[1])) {
       return;
     }
     $animationUrl = $matches[1];
@@ -34,8 +34,7 @@ class GfyCatStrategy extends Strategy {
   {
     $matches = [];
     preg_match('~property="og:video" content="([^"]+?\.mp4)"~', $this->getPageContent(), $matches);
-    if(empty($matches[1]))
-    {
+    if (empty($matches[1])) {
       return;
     }
     $videoUrl = $matches[1];

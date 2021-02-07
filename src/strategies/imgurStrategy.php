@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -18,8 +18,7 @@ class ImgurStrategy extends Strategy
       $videoUrl = $matches[1];
     } else {
       preg_match('~<meta name="twitter:player:stream"[\s\w\-="]+?content="([^"]+\.mp4)"~', $this->getPageContent(), $matches);
-      if(empty($matches[1]))
-      {
+      if (empty($matches[1])) {
         return;
       }
       $videoUrl = $matches[1];
@@ -31,8 +30,7 @@ class ImgurStrategy extends Strategy
   {
     $matches = [];
     preg_match('~<meta name="twitter:image"[\s\w\-="]+?content="([^"]+\.jpg)~', $this->getPageContent(), $matches);
-    if(empty($matches[1]))
-    {
+    if (empty($matches[1])) {
       return;
     }
     $imageUrl = $matches[1];

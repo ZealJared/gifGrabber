@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -13,8 +13,7 @@ class TenorStrategy extends Strategy
   {
     $matches = [];
     preg_match('~"mp4":{"url":"([^"]+)~', $this->getPageContent(), $matches);
-    if(empty($matches[1]))
-    {
+    if (empty($matches[1])) {
       return;
     }
     $mp4Url = json_decode(sprintf('"%s"', $matches[1]));

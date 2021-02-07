@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use GifGrabber\Category;
 use GifGrabber\Response;
@@ -14,7 +14,7 @@ class CategoryReadGifListRouteHandler extends RouteHandler
 
     $response = new Response();
     $response->setDataObject((object)[
-      'gif' => $category->getGifList()
+      'gif' => $category->getGifList(),
     ]);
     return $response;
   }

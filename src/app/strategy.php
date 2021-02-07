@@ -1,16 +1,26 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use Exception;
 
-abstract class Strategy {
-  private Gif|null $gif = null;
-  private string|null $pageContent = null;
+abstract class Strategy
+{
+  private Gif|
+
+null $gif = null;
+
+  private string|
+
+null $pageContent = null;
+
   protected bool $videoSaved = false;
+
   protected bool $imageSaved = false;
+
   protected bool $animationSaved = false;
 
-  protected function matches(Gif $gif): bool {
+  protected function matches(Gif $gif): bool
+  {
     return preg_match($this->getPattern(), $gif->getUrl()) === 1;
   }
 
@@ -32,8 +42,8 @@ abstract class Strategy {
     if (is_null($this->pageContent)) {
       $context = stream_context_create([
         'http' => [
-          'header' => 'Cookie: over18=1\r\n'
-        ]
+          'header' => 'Cookie: over18=1\r\n',
+        ],
       ]);
       $pageContent = file_get_contents($this->getGif()->getUrl(), use_include_path: false, context: $context);
       if ($pageContent === false) {
@@ -104,19 +114,19 @@ abstract class Strategy {
   protected function normalize(): void
   {
     // if video is saved and animation is not, video to animation
-    if($this->videoSaved && !$this->animationSaved){
+    if ($this->videoSaved && !$this->animationSaved) {
       $this->videoToAnimation();
     }
     // if video is saved and image is not, video to image
-    if($this->videoSaved && !$this->imageSaved){
+    if ($this->videoSaved && !$this->imageSaved) {
       $this->videoToImage();
     }
     // if animation is saved and video is not and image is not, animation to image
-    if($this->animationSaved && !$this->videoSaved && !$this->imageSaved){
+    if ($this->animationSaved && !$this->videoSaved && !$this->imageSaved) {
       $this->animationToImage();
     }
     // if animation is saved and video is not, animation to video
-    if($this->animationSaved && !$this->videoSaved){
+    if ($this->animationSaved && !$this->videoSaved) {
       $this->animationToVideo();
     }
   }

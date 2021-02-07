@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -17,7 +17,7 @@ class RouteParameters
 
   private function get(string $key): string
   {
-    if(!isset($this->params[$key])){
+    if (!isset($this->params[$key])) {
       throw new Exception(sprintf(
         'No route parameter "%s" provided.',
         $key
@@ -33,8 +33,7 @@ class RouteParameters
 
   public function getInteger(string $key): int
   {
-    if(!is_numeric($this->get($key)))
-    {
+    if (!is_numeric($this->get($key))) {
       throw new Exception(sprintf('Route parameter "%s" is not an integer.', $key));
     }
     return intval($this->get($key));

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use GifGrabber\Gif;
 use GifGrabber\Response;
@@ -15,7 +15,7 @@ class GifDeleteRouteHandler extends RouteHandler
 
     $response = new Response();
     $response->setDataObject((object)[
-      'gif' => $gif
+      'gif' => $gif,
     ]);
     return $response;
   }

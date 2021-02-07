@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use Exception;
 
-class Config {
+class Config
+{
   public static function getDatabaseHost(): string
   {
     return 'localhost';
@@ -32,8 +33,7 @@ class Config {
   public static function getStoragePath(): string
   {
     $path = realpath(sprintf('%s/../../public/%s/', __DIR__, self::getStorageFolderName()));
-    if($path === false)
-    {
+    if ($path === false) {
       throw new Exception('Storage folder not found.');
     }
     return $path;
@@ -57,7 +57,7 @@ class Config {
   public static function getAllowedOrigins(): array
   {
     return [
-      'http://localhost:8080'
+      'http://localhost:8080',
     ];
   }
 

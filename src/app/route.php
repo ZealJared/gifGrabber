@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -7,9 +7,14 @@ use Exception;
 class Route
 {
   private string $method;
+
   private string $path;
+
   private RouteHandler $handler;
-  private RouteParameters|null $params = null;
+
+  private RouteParameters|
+
+null $params = null;
 
   public function __construct(string $method, string $path, RouteHandler $handler)
   {

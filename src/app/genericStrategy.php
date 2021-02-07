@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -32,15 +32,14 @@ class GenericStrategy extends Strategy
     }
     // if mp4 not found, try to find m3u8 playlist
     $videoUrl = Reddit::getTsUrl($this->getPageContent());
-    if($videoUrl){
+    if ($videoUrl) {
       $this->saveVideo($videoUrl);
     }
   }
 
   protected function fetchImage(): void
   {
-    if(preg_match('~\.(jpg|jpeg|png)$~', $this->getUrl()))
-    {
+    if (preg_match('~\.(jpg|jpeg|png)$~', $this->getUrl())) {
       $this->saveImage($this->getUrl());
       return;
     }
@@ -54,8 +53,7 @@ class GenericStrategy extends Strategy
       return;
     }
     // video not set, get whatever jpg
-    if($this->videoSaved || $this->animationSaved)
-    {
+    if ($this->videoSaved || $this->animationSaved) {
       return;
     }
     $matches = [];
@@ -69,13 +67,12 @@ class GenericStrategy extends Strategy
 
   protected function fetchAnimation(): void
   {
-    if(preg_match('~\.gif$~', $this->getUrl()))
-    {
+    if (preg_match('~\.gif$~', $this->getUrl())) {
       $this->saveAnimation($this->getUrl());
       return;
     }
     // if we have the video, no need for the gif
-    if($this->videoSaved){
+    if ($this->videoSaved) {
       return;
     }
     $matches = [];
@@ -86,7 +83,7 @@ class GenericStrategy extends Strategy
     }
     $animationUrl = htmlspecialchars_decode($animationUrl);
     // some files are named '.gif' and served as jpg >8(
-    if(strstr($animationUrl, 'format=png') !== false){
+    if (strstr($animationUrl, 'format=png') !== false) {
       return;
     }
     $this->saveAnimation($animationUrl);

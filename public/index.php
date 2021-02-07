@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use Throwable;
@@ -13,20 +13,18 @@ if (in_array(Request::getOrigin(), Config::getAllowedOrigins())) {
   header(sprintf('Access-Control-Allow-Origin: %s', Request::getOrigin()));
 }
 header(sprintf('Access-Control-Allow-Headers: %s', implode(', ', [
-  'Authorization'
+  'Authorization',
 ])));
 
 $routeFiles = glob('../src/routes/*') ?: [];
 
-foreach($routeFiles as $routeFile)
-{
+foreach ($routeFiles as $routeFile) {
   require_once $routeFile;
 }
 
 $strategyFiles = glob('../strategies/*') ?: [];
 
-foreach($strategyFiles as $strategyFile)
-{
+foreach ($strategyFiles as $strategyFile) {
   require_once $strategyFile;
 }
 
@@ -43,11 +41,11 @@ try {
     'class' => '',
     'type' => '',
     'args' => [
-      ''
-    ]
+      '',
+    ],
   ]);
   $exception->setDataObject((object)[
-    'trace' => $trace
+    'trace' => $trace,
   ]);
   $exception->render();
 }

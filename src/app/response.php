@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use stdClass;
 
-class Response {
+class Response
+{
   /** @var stdClass */
   private $payload;
 
@@ -19,8 +20,7 @@ class Response {
 
   public function addError(string $message): void
   {
-    if(!property_exists($this->payload, 'errors'))
-    {
+    if (!property_exists($this->payload, 'errors')) {
       $this->payload->errors = [];
     }
     assert(is_array($this->payload->errors));

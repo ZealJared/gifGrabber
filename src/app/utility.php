@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
-class Utility {
+class Utility
+{
   public static function getUrlFileExtension(string $url): string
   {
     return strtolower(pathinfo(self::getUrlPath($url), PATHINFO_EXTENSION));
@@ -12,21 +13,18 @@ class Utility {
     $urlString = '';
     $urlParts = parse_url($url);
     $scheme = $urlParts['scheme'] ?? '';
-    if($scheme)
-    {
+    if ($scheme) {
       $urlString .= $scheme . '://';
     }
     $user = $urlParts['user'] ?? '';
     $pass = $urlParts['pass'] ?? '';
-    if($user && $pass)
-    {
+    if ($user && $pass) {
       $urlString .= $user . ':' . $pass . '@';
     }
     $host = $urlParts['host'] ?? '';
     $urlString .= $host;
     $port = $urlParts['port'] ?? '';
-    if($port)
-    {
+    if ($port) {
       $urlString .= ':' . $port;
     }
     $path = $urlParts['path'] ?? '';
@@ -37,12 +35,10 @@ class Utility {
   /** @psalm-assert array<string,string> $array */
   public static function assertNamedStringCollection(array $array): void
   {
-    foreach(array_keys($array) as $key)
-    {
+    foreach (array_keys($array) as $key) {
       assert(is_string($key));
     }
-    foreach($array as $value)
-    {
+    foreach ($array as $value) {
       assert(is_string($value));
     }
   }
@@ -57,8 +53,7 @@ class Utility {
   public static function assertArrayOfFloatIntStringNull(array $array): void
   {
     /** @var mixed $value */
-    foreach($array as $key => $value)
-    {
+    foreach ($array as $key => $value) {
       assert(is_string($key));
       self::getFloatIntStringNull($value);
     }

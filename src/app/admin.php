@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use Exception;
 
-class Admin {
+class Admin
+{
   public static function guard(): void
   {
     if (!Request::isAdmin()) {

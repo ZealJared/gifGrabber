@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -14,19 +14,24 @@ abstract class Model implements JsonSerializable
 {
   /** @var array<string,(float|int|string|null)> */
   private array $data = [];
+
   /** @var array<string,bool> */
   private array $changed = [];
+
   /** @var array<string,string> */
   protected array $aliases = [];
+
   /** @var array<int,string> */
   protected array $alsoSerialize = [];
+
   /** @var array<int,string> */
   protected array $doNotSet = [];
+
   /** @var array<int,string> */
   private array $doNotEverSet = [
     'Id',
     'CreatedAt',
-    'UpdatedAt'
+    'UpdatedAt',
   ];
 
   abstract public static function getTableName(): string;
@@ -133,7 +138,7 @@ abstract class Model implements JsonSerializable
     );
     $statement = Database::getConnection()->prepare($sql);
     $statement->execute([
-      'id' => $id
+      'id' => $id,
     ]);
     $records = self::fromRecords($statement);
     if (empty($records)) {
@@ -186,7 +191,7 @@ abstract class Model implements JsonSerializable
 
   protected function setNull(string $key): void
   {
-    $this->set($key, NULL);
+    $this->set($key, null);
   }
 
   protected function setBool(string $key, bool $value): void
@@ -295,7 +300,7 @@ abstract class Model implements JsonSerializable
   {
     $this->hookBeforeUpdate();
     $values = [
-      'id' => $this->getId()
+      'id' => $this->getId(),
     ];
     $setStatements = [];
     foreach (array_keys($this->changed) as $key) {
@@ -331,7 +336,7 @@ abstract class Model implements JsonSerializable
     );
     $statement = Database::getConnection()->prepare($sql);
     $statement->execute([
-      'id' => $this->getId()
+      'id' => $this->getId(),
     ]);
     $this->hookAfterDelete();
   }

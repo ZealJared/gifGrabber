@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use GifGrabber\Admin;
 use GifGrabber\Gif;
@@ -18,7 +18,7 @@ class GifReadRouteHandler extends RouteHandler
 
     $response = new Response();
     $response->setDataObject((object)[
-      'gif' => $gif
+      'gif' => $gif,
     ]);
     return $response;
   }

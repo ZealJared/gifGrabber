@@ -1,3 +1,5 @@
 /vendor/
 public/storage/
 debug.log
+/tools/
+.php_cs.cache

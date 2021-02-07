@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace GifGrabber;
 
@@ -20,7 +20,7 @@ class Category extends Model
       'Id' => null,
       'Name' => null,
       'CreatedAt' => (new DateTime())->format('Y-m-d G:i:s'),
-      'UpdatedAt' => (new DateTime())->format('Y-m-d G:i:s')
+      'UpdatedAt' => (new DateTime())->format('Y-m-d G:i:s'),
     ];
   }
 
@@ -61,7 +61,7 @@ class Category extends Model
       );
       $statement = Database::getConnection()->prepare($sql);
       $statement->execute([
-        'categoryId' => $this->getId()
+        'categoryId' => $this->getId(),
       ]);
       $this->gifList = Gif::fromRecords($statement);
     }

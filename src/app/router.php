@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
-class Router {
+class Router
+{
   /** @var array<int,Route> */
   private static $routes;
 
@@ -12,10 +13,8 @@ class Router {
 
   public static function route(): void
   {
-    foreach(self::$routes as $route)
-    {
-      if($route->isMatch())
-      {
+    foreach (self::$routes as $route) {
+      if ($route->isMatch()) {
         $route->getResponse()->render();
       }
     }

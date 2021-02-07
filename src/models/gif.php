@@ -1,24 +1,25 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use DateTime;
 use Exception;
 use Throwable;
 
-class Gif extends Model {
+class Gif extends Model
+{
   /** @var Category|null */
   private $category = null;
 
   protected $doNotSet = [
     'ImageUrl',
     'AnimationUrl',
-    'VideoUrl'
+    'VideoUrl',
   ];
 
   protected $alsoSerialize = [
     'ImageUrl',
     'AnimationUrl',
-    'VideoUrl'
+    'VideoUrl',
   ];
 
   public static function getTableName(): string
@@ -36,7 +37,7 @@ class Gif extends Model {
       'Title' => null,
       'Caption' => null,
       'Url' => null,
-      'CategoryId' => null
+      'CategoryId' => null,
     ];
   }
 
@@ -99,7 +100,9 @@ class Gif extends Model {
     if (empty($headers)) {
       throw new Exception(sprintf('Could not reach URL: %s', $url));
     }
-    $integerKeyHeaders = array_filter($headers, function (mixed $key) { return is_int($key); }, ARRAY_FILTER_USE_KEY);
+    $integerKeyHeaders = array_filter($headers, function (mixed $key) {
+      return is_int($key);
+    }, ARRAY_FILTER_USE_KEY);
     if (array_pop($integerKeyHeaders) !== 'HTTP/1.1 200 OK') {
       throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $correctedUrl));
     }
@@ -123,7 +126,7 @@ class Gif extends Model {
 
   public function getCategory(): Category
   {
-    if(is_null($this->category)){
+    if (is_null($this->category)) {
       $this->category = Category::findById($this->getCategoryId());
     }
     return $this->category;
@@ -234,13 +237,12 @@ class Gif extends Model {
   public function saveVideo(string $videoUrl): void
   {
     $videoExtension = Utility::getUrlFileExtension($videoUrl);
-    if($videoExtension === 'ts')
-    {
+    if ($videoExtension === 'ts') {
       $this->saveTsVideo($videoUrl);
       return;
     }
     $videoPath = $this->getVideoPath();
-    if(file_exists($videoPath)){
+    if (file_exists($videoPath)) {
       unlink($videoPath);
     }
     copy($videoUrl, $videoPath);
@@ -250,12 +252,12 @@ class Gif extends Model {
   {
     $destinationTs = sprintf('%s/video.ts', $this->getStoragePath());
     $destinationMp4 = $this->getVideoPath();
-    if(file_exists($destinationTs)){
+    if (file_exists($destinationTs)) {
       unlink($destinationTs);
     }
     copy($tsVideoUrl, $destinationTs);
     // delete preexisting video
-    if(file_exists($destinationMp4)){
+    if (file_exists($destinationMp4)) {
       unlink($destinationMp4);
     }
     // convert TS to MP4
@@ -270,7 +272,7 @@ class Gif extends Model {
   public function saveAnimation(string $animationUrl): void
   {
     $animationPath = $this->getAnimationPath();
-    if(file_exists($animationPath)){
+    if (file_exists($animationPath)) {
       unlink($animationPath);
     }
     copy($animationUrl, $animationPath);
@@ -279,19 +281,19 @@ class Gif extends Model {
   public function saveImage(string $imageUrl): void
   {
     $imagePath = $this->getImagePath();
-    if(file_exists($imagePath)){
+    if (file_exists($imagePath)) {
       unlink($imagePath);
     }
     // if png, convert
     $extension = Utility::getUrlFileExtension($imageUrl);
     $imagePath = $this->getImagePath();
-    if(in_array($extension, ['jpg', 'jpeg'])){
+    if (in_array($extension, ['jpg', 'jpeg'])) {
       copy($imageUrl, $imagePath);
       return;
     }
     if ($extension === 'png') {
       $destinationPng = sprintf('%s/image.png', $this->getStoragePath());
-      if(file_exists($destinationPng)){
+      if (file_exists($destinationPng)) {
         unlink($destinationPng);
       }
       copy($imageUrl, $destinationPng);
@@ -307,7 +309,7 @@ class Gif extends Model {
   {
     $animationPath = $this->getAnimationPath();
     $videoPath = $this->getVideoPath();
-    if(file_exists($videoPath)){
+    if (file_exists($videoPath)) {
       unlink($videoPath);
     }
     exec(sprintf(
@@ -321,7 +323,7 @@ class Gif extends Model {
   {
     $videoPath = $this->getVideoPath();
     $animationPath = $this->getAnimationPath();
-    if(file_exists($animationPath)){
+    if (file_exists($animationPath)) {
       unlink($animationPath);
     }
     exec(sprintf(
@@ -334,7 +336,7 @@ class Gif extends Model {
   private function firstFrameToImage(string $sourcePath): void
   {
     $imagePath = $this->getImagePath();
-    if(file_exists($imagePath)){
+    if (file_exists($imagePath)) {
       unlink($imagePath);
     }
     exec(sprintf(

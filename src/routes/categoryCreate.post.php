@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use GifGrabber\Category;
 use GifGrabber\Request;
@@ -17,7 +17,7 @@ class CategoryCreateRouteHandler extends RouteHandler
 
     $response = new Response();
     $response->setDataObject((object)[
-      'category' => $category
+      'category' => $category,
     ]);
     return $response;
   }

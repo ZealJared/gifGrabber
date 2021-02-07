@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use Exception;
 
-class Request {
+class Request
+{
   public static function getMethod(): string
   {
     $method = $_SERVER['REQUEST_METHOD'];
@@ -23,8 +24,7 @@ class Request {
   {
     $body = file_get_contents('php://input') ?: '';
     $jsonBody = json_decode($body);
-    if(!is_object($jsonBody))
-    {
+    if (!is_object($jsonBody)) {
       throw new Exception('Post body must be a JSON object.');
     }
     return $jsonBody;
@@ -56,9 +56,11 @@ class Request {
   }
 }
 
-class Auth {
+class Auth
+{
   /** @var string */
   private $userName = '';
+
   /** @var string */
   private $password = '';
 

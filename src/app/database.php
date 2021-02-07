@@ -1,16 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 namespace GifGrabber;
 
 use PDO;
 
-class Database {
+class Database
+{
   /** @var PDO|null */
   private static $connection = null;
 
   public static function getConnection(): PDO
   {
-    if(is_null(self::$connection))
-    {
+    if (is_null(self::$connection)) {
       $dsn = sprintf(
         'mysql:host=%s;dbname=%s',
         Config::getDatabaseHost(),
@@ -18,7 +18,7 @@ class Database {
       );
       self::$connection = new PDO($dsn, Config::getDatabaseUserName(), Config::getDatabasePassword(), [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
       ]);
     }
     return self::$connection;
