@@ -215,4 +215,142 @@ class Gif extends Model {
     }
     rmdir($this->getStoragePath());
   }
+
+  public function getAnimationPath(): string
+  {
+    return sprintf('%s/animation.gif', $this->getStoragePath());
+  }
+
+  public function getVideoPath(): string
+  {
+    return sprintf('%s/video.mp4', $this->getStoragePath());
+  }
+
+  public function getImagePath(): string
+  {
+    return sprintf('%s/image.jpg', $this->getStoragePath());
+  }
+
+  public function saveVideo(string $videoUrl): void
+  {
+    $videoExtension = Utility::getUrlFileExtension($videoUrl);
+    if($videoExtension === 'ts')
+    {
+      $this->saveTsVideo($videoUrl);
+      return;
+    }
+    $videoPath = $this->getVideoPath();
+    if(file_exists($videoPath)){
+      unlink($videoPath);
+    }
+    copy($videoUrl, $videoPath);
+  }
+
+  private function saveTsVideo(string $tsVideoUrl): void
+  {
+    $destinationTs = sprintf('%s/video.ts', $this->getStoragePath());
+    $destinationMp4 = $this->getVideoPath();
+    if(file_exists($destinationTs)){
+      unlink($destinationTs);
+    }
+    copy($tsVideoUrl, $destinationTs);
+    // delete preexisting video
+    if(file_exists($destinationMp4)){
+      unlink($destinationMp4);
+    }
+    // convert TS to MP4
+    $command = sprintf(
+      'ffmpeg -i %s -c:v libx264 -c:a aac %s',
+      $destinationTs,
+      $destinationMp4
+    );
+    exec($command);
+  }
+
+  public function saveAnimation(string $animationUrl): void
+  {
+    $animationPath = $this->getAnimationPath();
+    if(file_exists($animationPath)){
+      unlink($animationPath);
+    }
+    copy($animationUrl, $animationPath);
+  }
+
+  public function saveImage(string $imageUrl): void
+  {
+    $imagePath = $this->getImagePath();
+    if(file_exists($imagePath)){
+      unlink($imagePath);
+    }
+    // if png, convert
+    $extension = Utility::getUrlFileExtension($imageUrl);
+    $imagePath = $this->getImagePath();
+    if(in_array($extension, ['jpg', 'jpeg'])){
+      copy($imageUrl, $imagePath);
+      return;
+    }
+    if ($extension === 'png') {
+      $destinationPng = sprintf('%s/image.png', $this->getStoragePath());
+      if(file_exists($destinationPng)){
+        unlink($destinationPng);
+      }
+      copy($imageUrl, $destinationPng);
+      $command = sprintf(
+        'gm mogrify -resize "15000x15000>" -background white -extent 0x0 -format jpg -quality 75 %s',
+        $destinationPng
+      );
+      exec($command);
+    }
+  }
+
+  public function animationToVideo(): void
+  {
+    $animationPath = $this->getAnimationPath();
+    $videoPath = $this->getVideoPath();
+    if(file_exists($videoPath)){
+      unlink($videoPath);
+    }
+    exec(sprintf(
+      'ffmpeg -i %s -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" %s',
+      $animationPath,
+      $videoPath
+    ));
+  }
+
+  public function videoToAnimation(): void
+  {
+    $videoPath = $this->getVideoPath();
+    $animationPath = $this->getAnimationPath();
+    if(file_exists($animationPath)){
+      unlink($animationPath);
+    }
+    exec(sprintf(
+      'ffmpeg -i %s -vf "fps=12,scale=320:-1" -loop 0 %s',
+      $videoPath,
+      $animationPath
+    ));
+  }
+
+  private function firstFrameToImage(string $sourcePath): void
+  {
+    $imagePath = $this->getImagePath();
+    if(file_exists($imagePath)){
+      unlink($imagePath);
+    }
+    exec(sprintf(
+      'ffmpeg -i %s -vframes 1 %s',
+      $sourcePath,
+      $imagePath
+    ));
+  }
+
+  public function animationToImage(): void
+  {
+    $this->firstFrameToImage($this->getAnimationPath());
+  }
+
+  public function videoToImage(): void
+  {
+    $this->firstFrameToImage($this->getVideoPath());
+  }
 }
