@@ -9,47 +9,39 @@ class ImgurStrategy extends Strategy
     return '~^(?:https?://(?:[^/]+?\.)*?)?imgur\.com~';
   }
 
-  protected function saveVideo(): void
+  protected function fetchVideo(): void
   {
     $matches = [];
+    $videoUrl = '';
     preg_match('~property="og:video"[\s\w\-="]+?content="([^"]+?\.mp4)"~', $this->getPageContent(), $matches);
     if (!empty($matches[1])) {
       $videoUrl = $matches[1];
     } else {
       preg_match('~<meta name="twitter:player:stream"[\s\w\-="]+?content="([^"]+\.mp4)"~', $this->getPageContent(), $matches);
+      if(empty($matches[1]))
+      {
+        return;
+      }
       $videoUrl = $matches[1];
     }
-    $destination = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
-    if(file_exists($destination)){
-      unlink($destination);
-    }
-    copy($videoUrl, $destination);
+    $this->saveVideo($videoUrl);
   }
 
-  protected function saveImage(): void
+  protected function fetchImage(): void
   {
     $matches = [];
     preg_match('~<meta name="twitter:image"[\s\w\-="]+?content="([^"]+\.jpg)~', $this->getPageContent(), $matches);
-    $imageUrl = $matches[1];
-    $destination = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
-    if(file_exists($destination)){
-      unlink($destination);
+    if(empty($matches[1]))
+    {
+      return;
     }
-    copy($imageUrl, $destination);
+    $imageUrl = $matches[1];
+    $this->saveImage($imageUrl);
   }
 
-  protected function saveGif(): void
+  protected function fetchAnimation(): void
   {
-    $videoPath = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
-    $animationPath = sprintf('%s/animation.gif', $this->getGif()->getStoragePath());
-    if(file_exists($animationPath)){
-      unlink($animationPath);
-    }
-    exec(sprintf(
-      'ffmpeg -i %s -vf "fps=12,scale=320:-1" -loop 0 %s',
-      $videoPath,
-      $animationPath
-    ));
+    return;
   }
 }
 

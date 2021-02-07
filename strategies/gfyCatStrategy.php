@@ -7,40 +7,39 @@ class GfyCatStrategy extends Strategy {
     return '~^(?:https?://(?:[^/]+?\.)*?)?gfycat\.com~';
   }
 
-  protected function saveImage(): void
+  protected function fetchImage(): void
   {
     $matches = [];
     preg_match('~property="og:image" content="([^"]+?\.jpg)"~', $this->getPageContent(), $matches);
-    $imageUrl = $matches[1];
-    $destination = sprintf('%s/image.jpg', $this->getGif()->getStoragePath());
-    if(file_exists($destination)){
-      unlink($destination);
+    if(empty($matches[1]))
+    {
+      return;
     }
-    copy($imageUrl, $destination);
+    $imageUrl = $matches[1];
+    $this->saveImage($imageUrl);
   }
 
-  protected function saveGif(): void
+  protected function fetchAnimation(): void
   {
     $matches = [];
     preg_match('~property="og:image" content="([^"]+?\.gif)"~', $this->getPageContent(), $matches);
-    $animationUrl = $matches[1];
-    $destination = sprintf('%s/animation.gif', $this->getGif()->getStoragePath());
-    if(file_exists($destination)){
-      unlink($destination);
+    if(empty($matches[1])){
+      return;
     }
-    copy($animationUrl, $destination);
+    $animationUrl = $matches[1];
+    $this->saveAnimation($animationUrl);
   }
 
-  protected function saveVideo(): void
+  protected function fetchVideo(): void
   {
     $matches = [];
     preg_match('~property="og:video" content="([^"]+?\.mp4)"~', $this->getPageContent(), $matches);
-    $videoUrl = $matches[1];
-    $destination = sprintf('%s/video.mp4', $this->getGif()->getStoragePath());
-    if(file_exists($destination)){
-      unlink($destination);
+    if(empty($matches[1]))
+    {
+      return;
     }
-    copy($videoUrl, $destination);
+    $videoUrl = $matches[1];
+    $this->saveVideo($videoUrl);
   }
 }
 
