@@ -97,14 +97,16 @@ null $category = null;
     if (parse_url($correctedUrl) === false) {
       throw new Exception('Provided URL is invalid.');
     }
-    $headers = get_headers($correctedUrl, 1);
-    if (empty($headers)) {
-      throw new Exception(sprintf('Could not reach URL: %s', $url));
+    $okay = false;
+    $headers = get_headers($correctedUrl);
+    foreach ($headers as $header) {
+      assert(is_string($header));
+      if (strstr($header, '200 OK') !== false) {
+        $okay = true;
+        break;
+      }
     }
-    $integerKeyHeaders = array_filter($headers, function (mixed $key) {
-      return is_int($key);
-    }, ARRAY_FILTER_USE_KEY);
-    if (array_pop($integerKeyHeaders) !== 'HTTP/1.1 200 OK') {
+    if (!$okay) {
       throw new Exception(sprintf('Request did not return 200 OK for URL: %s', $correctedUrl));
     }
     $this->setString('url', $correctedUrl);
