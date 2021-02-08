@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace GifGrabber;
 
+use Exception;
 use Throwable;
 
 error_reporting(E_ALL);
@@ -18,11 +19,19 @@ header(sprintf('Access-Control-Allow-Headers: %s', implode(', ', [
 
 $routeFiles = glob('../src/routes/*') ?: [];
 
+if (empty($routeFiles)) {
+  throw new Exception('No routes found.');
+}
+
 foreach ($routeFiles as $routeFile) {
   require_once $routeFile;
 }
 
 $strategyFiles = glob('../src/strategies/*') ?: [];
+
+if (empty($strategyFiles)) {
+  throw new Exception('No strategies found.');
+}
 
 foreach ($strategyFiles as $strategyFile) {
   require_once $strategyFile;
