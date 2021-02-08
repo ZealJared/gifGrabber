@@ -22,7 +22,7 @@ foreach ($routeFiles as $routeFile) {
   require_once $routeFile;
 }
 
-$strategyFiles = glob('../strategies/*') ?: [];
+$strategyFiles = glob('../src/strategies/*') ?: [];
 
 foreach ($strategyFiles as $strategyFile) {
   require_once $strategyFile;
