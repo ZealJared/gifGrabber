@@ -3,3 +3,4 @@ public/storage/
 debug.log
 /tools/
 .php_cs.cache
+/.vscode/launch.json

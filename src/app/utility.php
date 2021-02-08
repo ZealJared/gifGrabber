@@ -64,6 +64,9 @@ class Utility
 
   public static function log(string $message): void
   {
-    file_put_contents(Config::getLogFilePath(), $message . '\n', FILE_APPEND);
+    if (!Config::getLoggingEnabled()) {
+      return;
+    }
+    file_put_contents(Config::getLogFilePath(), $message . "\n", FILE_APPEND);
   }
 }

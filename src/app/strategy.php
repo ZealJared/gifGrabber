@@ -21,7 +21,15 @@ null $pageContent = null;
 
   protected function matches(Gif $gif): bool
   {
-    return preg_match($this->getPattern(), $gif->getUrl()) === 1;
+    $isMatch = (preg_match($this->getPattern(), $gif->getUrl()) === 1);
+    if (!$isMatch) {
+      Utility::log(sprintf(
+        '%s does not match %s',
+        $gif->getUrl(),
+        $this->getPattern()
+      ));
+    }
+    return $isMatch;
   }
 
   protected function getUrl(): string

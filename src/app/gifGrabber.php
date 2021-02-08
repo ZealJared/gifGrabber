@@ -13,7 +13,12 @@ class GifGrabber
 
   public static function grab(Gif $gif): void
   {
+    Utility::log('Grabbing...');
     foreach (self::$strategies as $strategy) {
+      Utility::log(sprintf(
+        'Checking %s',
+        $strategy::class
+      ));
       if ($strategy->execute($gif)) {
         return;
       }

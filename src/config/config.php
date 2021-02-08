@@ -75,4 +75,9 @@ class Config
   {
     return realpath(__DIR__ . '/../../debug.log');
   }
+
+  public static function getLoggingEnabled(): bool
+  {
+    return true;
+  }
 }
