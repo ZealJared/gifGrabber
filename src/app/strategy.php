@@ -64,49 +64,49 @@ null $pageContent = null;
 
   protected function saveImage(string $imageUrl): void
   {
-    // error_log(sprintf('Saving image: %s', $imageUrl));
+    Utility::log(sprintf('Saving image: %s', $imageUrl));
     $this->getGif()->saveImage($imageUrl);
     $this->imageSaved = true;
   }
 
   protected function saveVideo(string $videoUrl): void
   {
-    // error_log(sprintf('Saving video: %s', $videoUrl));
+    Utility::log(sprintf('Saving video: %s', $videoUrl));
     $this->getGif()->saveVideo($videoUrl);
     $this->videoSaved = true;
   }
 
   protected function saveAnimation(string $animationUrl): void
   {
-    // error_log(sprintf('Saving animation: %s', $animationUrl));
+    Utility::log(sprintf('Saving animation: %s', $animationUrl));
     $this->getGif()->saveAnimation($animationUrl);
     $this->animationSaved = true;
   }
 
   protected function videoToAnimation(): void
   {
-    // error_log('Converting video to animation.');
+    Utility::log('Converting video to animation.');
     $this->getGif()->videoToAnimation();
     $this->animationSaved = true;
   }
 
   protected function animationToVideo(): void
   {
-    // error_log('Converting animation to video.');
+    Utility::log('Converting animation to video.');
     $this->getGif()->animationToVideo();
     $this->videoSaved = true;
   }
 
   protected function videoToImage(): void
   {
-    // error_log('Getting image from video.');
+    Utility::log('Getting image from video.');
     $this->getGif()->videoToImage();
     $this->imageSaved = true;
   }
 
   protected function animationToImage(): void
   {
-    // error_log('Getting image from animation.');
+    Utility::log('Getting image from animation.');
     $this->getGif()->animationToImage();
     $this->imageSaved = true;
   }

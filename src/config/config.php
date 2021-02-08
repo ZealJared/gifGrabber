@@ -70,4 +70,9 @@ class Config
   {
     return 'feelinglobsterleatherknife';
   }
+
+  public static function getLogFilePath(): string
+  {
+    return realpath(__DIR__ . '/../../debug.log');
+  }
 }

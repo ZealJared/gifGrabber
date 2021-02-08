@@ -61,4 +61,9 @@ class Utility
       self::getFloatIntStringNull($value);
     }
   }
+
+  public static function log(string $message): void
+  {
+    file_put_contents(Config::getLogFilePath(), $message . '\n', FILE_APPEND);
+  }
 }

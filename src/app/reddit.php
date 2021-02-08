@@ -20,7 +20,7 @@ class Reddit
       return '';
     }
     $tsUrl = sprintf('%s/%s', $basePath, $videoUrl);
-    // error_log(sprintf('Found TS video: %s', $tsUrl));
+    // Utility::log(sprintf('Found TS video: %s', $tsUrl));
     return $tsUrl;
   }
 
@@ -34,7 +34,7 @@ class Reddit
       return '';
     }
     $playlistUrl = sprintf('%s/%s', $basePath, $playlistUrl);
-    // error_log(sprintf('Found playlist: %s', $playlistUrl));
+    // Utility::log(sprintf('Found playlist: %s', $playlistUrl));
     return $playlistUrl;
   }
 
@@ -44,7 +44,7 @@ class Reddit
     if (!$playlistUrl) {
       return '';
     }
-    // error_log(sprintf('Found playlist URL: %s', $playlistUrl));
+    // Utility::log(sprintf('Found playlist URL: %s', $playlistUrl));
     $playlistData = file_get_contents($playlistUrl) ?: '';
     $maxDepth = 5; // just in case
     $count = 0;
