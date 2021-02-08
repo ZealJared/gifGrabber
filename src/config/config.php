@@ -78,6 +78,6 @@ class Config
 
   public static function getLoggingEnabled(): bool
   {
-    return true;
+    return false;
   }
 }
